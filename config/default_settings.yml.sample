@@ -1,0 +1,5 @@
+development:
+  turk_environment: sandbox
+
+production:
+  turk_environment: sandbox

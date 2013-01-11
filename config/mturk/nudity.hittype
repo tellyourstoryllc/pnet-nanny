@@ -1,0 +1,47 @@
+######################################
+## External HIT Properties
+######################################
+
+Title:Flag offensive images (WARNING: This HIT may contain offensive content! Discretion is advised.)
+Description:Mark the images which contain offensive or adult content
+Keywords:image, tag, adult
+Reward.Amount:0.01
+Reward.CurrencyCode:USD
+
+######################################
+## HIT Timing Properties
+######################################
+
+# this Assignment Duration value is 60 * 60 = 1 hour
+AssignmentDurationInSeconds:360
+
+# this Auto Approval period is 60 * 60 = 1 hour 
+AutoApprovalDelayInSeconds:1800
+
+######################################
+## Qualification Properties
+######################################
+
+# In this example, two system qualifications are specified for the HIT.
+
+# this is a built-in qualification -- user must have an approval rate of 25% or greater
+QualificationRequirement.1.QualificationTypeId:000000000000000000L0
+QualificationRequirement.1.Comparator:GreaterThan
+QualificationRequirement.1.IntegerValue:25
+QualificationRequirement.1.RequiredToPreview:false
+
+# this is a built-in qualification -- user must have an abandonment rate of 50% or less
+QualificationRequirement.2.QualificationTypeId:00000000000000000070
+QualificationRequirement.2.Comparator:LessThan
+QualificationRequirement.2.IntegerValue:51
+QualificationRequirement.2.RequiredToPreview:true
+
+# adult qualification
+QualificationRequirement.3.QualificationTypeId:00000000000000000060
+QualificationRequirement.3.Comparator:EqualTo
+QualificationRequirement.3.IntegerValue:1
+QualificationRequirement.3.RequiredToPreview:true
+
+# photo moderation masters
+#QualificationRequirement.4.QualificationTypeId:21VZU98JHSTLZ5BPP4A9NOBJEK3DPG
+#QualificationRequirement.4.Comparator:Exists

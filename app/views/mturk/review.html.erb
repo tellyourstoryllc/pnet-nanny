@@ -1,0 +1,92 @@
+<html>
+<script language="Javascript">
+//
+// This method Gets URL Parameters (GUP)
+//
+function gup( name )
+{
+  var regexS = "[\\?&]"+name+"=([^&#]*)";
+  var regex = new RegExp( regexS );
+  var tmpURL = window.location.href;
+  var results = regex.exec( tmpURL );
+  if( results == null )
+    return "";
+  else
+    return results[1];
+}
+
+//
+// This method decodes the query parameters that were URL-encoded
+//
+function decode(strToDecode)
+{
+  var encoded = strToDecode;
+  return unescape(encoded.replace(/\+/g,  " "));
+}
+
+</script>
+<style type="text/css">
+.selected { border: 2px solid red; opacity:0.75; background-color: red;}
+.unselected { border: 2px dotted #ddd; }
+.submit_button { margin: 2px 0 10px 0; }
+</style>
+<body>
+
+<% if ref = request.env['HTTP_REFERER'] and ref =~ /workersandbox/ %>	
+  <form id="mturk_form" method="POST" action="http://workersandbox.mturk.com/mturk/externalSubmit">
+<% elsif @direct_view and @current_worker %>
+  <form id="mturk_form" method="POST" action=<%= url_for(:action=>'vote') %>>
+<% else %>
+  <form id="mturk_form" method="POST" action="http://www.mturk.com/mturk/externalSubmit">
+<% end %>
+
+<input type="hidden" id="assignmentId" name="assignmentId" value="<%= params['assignmentId'] %>">
+<input type="hidden" id="taskname" name="taskname" value="<%= @task.name %>">
+
+<%== Kramdown::Document.new( @task.instructions, :auto_ids => false).to_html %>
+
+<hr />
+
+<div id='fotos' style="clear:right;">
+<% @photos.each do |foto| %>
+	<div style="float:left; margin: 2px; padding: 2px;" id="foto_div_<%= foto.id %>" class="unselected">
+		<label for="foto_<%= foto.id %>">
+		<img width="200" height="200" style="margin-right: 10px;" src="<%= foto.url %>" onerror="$('foto_<%= foto.id %>').checked = true; $('foto_div_<%= foto.id %>').hidden = true;" />
+		</label>
+		<center>
+		<input type="checkbox" value="<%= foto.id %>" name="displayed[]" style="display:none;" checked/>
+		<input type="checkbox" value="<%= foto.id %>" id="foto_<%= foto.id %>" name="flagged[]" onchange="
+			if (this.checked) { 
+				$('foto_div_<%= foto.id %>').className='selected'; 
+			} else {
+				$('foto_div_<%= foto.id %>').className='unselected';
+			}" />
+		</center>
+	</div>
+<% end %>
+</div>
+<div style="clear:both;">
+<% 
+unless params['assignmentId'] and params['assignmentId'] == 'ASSIGNMENT_ID_NOT_AVAILABLE' %>
+<p style="font-size:1.2em; color:red;">IMPORTANT: You may be banned from this HIT if you fail to flag inappropriate photos or wrongly flag permitted photos. Flagging accuracy is determined by comparing your flags to those of other reviewers.</p>
+<input type=submit value="SUBMIT" class="submit_button">
+<% 
+end %>
+</div>
+</form>
+<hr />
+<script language="Javascript">
+    // Check if the worker is PREVIEWING the HIT or if they've ACCEPTED the HIT
+	if (gup('assignmentId') == "ASSIGNMENT_ID_NOT_AVAILABLE") {
+		// If we're previewing, disable the button and give it a helpful message
+		document.getElementById('submitButton').disabled = true;
+		document.getElementById('submitButton').value = "You must ACCEPT the HIT before you can submit the results.";
+	} else {
+		var form = document.getElementById('mturk_form');
+		if (document.referrer && ( document.referrer.indexOf('workersandbox') != -1) ) {
+			form.action = "http://workersandbox.mturk.com/mturk/externalSubmit";
+		}
+	}
+</script>
+</body>
+</html>

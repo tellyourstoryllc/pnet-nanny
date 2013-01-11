@@ -1,0 +1,104 @@
+CREATE TABLE `clients` (
+  `id` int(20) unsigned NOT NULL,
+  `name` varchar(50) DEFAULT NULL,
+  `signature` char(16) DEFAULT NULL,
+  `status` enum('active','disabled','deleted') DEFAULT NULL,
+  `level` smallint(5) unsigned NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE `photo_fingerprints` (
+  `id` bigint(10) unsigned NOT NULL,
+  `value` bigint(20) unsigned NOT NULL,
+  `created_at` datetime NOT NULL,
+  `photo_count` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `fingerprint` (`value`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE `photos` (
+  `id` bigint(20) unsigned NOT NULL,
+  `client_id` smallint(5) unsigned DEFAULT NULL,
+  `url` varchar(200) DEFAULT NULL,
+  `fingerprint` bigint(20) unsigned DEFAULT NULL,
+  `status` enum('pending','delivering','completed','deleted') NOT NULL DEFAULT 'pending',
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `url` (`url`),
+  KEY `status` (`status`,`created_at`),
+  KEY `fingerprint` (`fingerprint`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED;
+
+CREATE TABLE `schema_migrations` (
+  `version` varchar(255) NOT NULL,
+  UNIQUE KEY `unique_schema_migrations` (`version`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE `sessions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `session_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `data` text COLLATE utf8_unicode_ci,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_sessions_on_session_id` (`session_id`),
+  KEY `index_sessions_on_updated_at` (`updated_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `use_log_caches` (
+  `id` int(10) unsigned NOT NULL,
+  `name` varchar(250) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `date` date NOT NULL DEFAULT '0000-00-00',
+  `count` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `date` (`date`,`name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE `use_log_categories` (
+  `id` int(10) unsigned NOT NULL,
+  `parent_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `name` varchar(50) NOT NULL,
+  `description` varchar(250) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `parent_id` (`parent_id`,`name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE `use_log_data` (
+  `id` int(10) unsigned NOT NULL,
+  `category_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `date` date NOT NULL DEFAULT '0000-00-00',
+  `count` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `date` (`date`,`category_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE `votes` (
+  `id` bigint(20) unsigned NOT NULL,
+  `created_at` datetime NOT NULL,
+  `worker_id` int(10) unsigned NOT NULL,
+  `photo_id` bigint(20) unsigned NOT NULL,
+  `taskname` enum('nudity') DEFAULT NULL,
+  `decision` enum('pass','fail') NOT NULL,
+  `weight` tinyint(3) unsigned NOT NULL DEFAULT '1',
+  `correct` enum('pending','yes','no','unknown') NOT NULL DEFAULT 'pending',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+CREATE TABLE `workers` (
+  `id` bigint(20) unsigned NOT NULL,
+  `turk_id` bigint(20) unsigned DEFAULT NULL,
+  `username` varchar(100) DEFAULT NULL,
+  `password` varchar(32) DEFAULT NULL,
+  `clearance` tinyint(2) unsigned NOT NULL DEFAULT '0',
+  `weight` tinyint(2) unsigned NOT NULL DEFAULT '1',
+  `token` varchar(32) DEFAULT NULL,
+  `status` enum('active','deleted','suspended','banned','bot') NOT NULL DEFAULT 'active',
+  `created_at` datetime NOT NULL,
+  `creating_ip` char(15) DEFAULT NULL,
+  `total_votes` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `rating` smallint(5) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `turk_id` (`turk_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+INSERT INTO schema_migrations (version) VALUES ('20130111210021');

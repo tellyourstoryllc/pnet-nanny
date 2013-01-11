@@ -1,0 +1,6 @@
+nudity:
+  hit: 'nudity.hit'
+  hittype: 'nudity.hittype'
+  instructions: 'nudity.instructions'
+  photos_per_hit: 150
+  queue_delay: 600

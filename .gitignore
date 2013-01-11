@@ -1,12 +1,15 @@
+config/*.yml
+*.log
+/log/*
+/tmp/*
 *.rbc
+*.rdb
 *.sassc
 .sass-cache
 capybara-*.html
 .rspec
 /.bundle
 /vendor/bundle
-/log/*
-/tmp/*
 /db/*.sqlite3
 /public/system/*
 /coverage/
@@ -14,3 +17,6 @@ capybara-*.html
 **.orig
 rerun.txt
 pickle-email-*.html
+.rvmrc
+**.DS_Store
+Gemfile.lock

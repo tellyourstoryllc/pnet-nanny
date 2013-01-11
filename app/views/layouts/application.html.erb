@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>PNet Nanny</title>
+
+    <!--- Blueprint CSS Framework -->
+    <%= stylesheet_link_tag "blueprint/screen.css", :media => "screen, projection" %>
+    <%= stylesheet_link_tag "blueprint/print.css", :media => "print" %>
+    <!--[if IE]>
+      <%= stylesheet_link_tag "blueprint/ie.css", :media => "screen, projection" %>
+    <![endif]-->
+
+    <!-- Homepage CSS -->
+    <%= stylesheet_link_tag "site.css", :type=>'text/css', :media => "screen, projection" %>
+    <%= stylesheet_link_tag "application", :media => "all" %>
+    <%= javascript_include_tag "application" %>
+    <%= csrf_meta_tags %>
+
+    <% if defined? @content_for_javascript %>
+      <script type="text/javascript">
+      <%= @content_for_javascript %>
+      </script>
+    <% end %>
+
+    <% if defined? @content_for_css %>
+      <style type="text/css">
+      <%= @content_for_css %>
+      </style>
+    <% end %>
+
+    <%= yield :head %>
+
+  </head>
+  <body>
+    <div class='container'>
+      <div class='first span-12'>
+      <h1><b>Peanut Nanny</b></h1>
+      </div>
+      <div class='last span-12' id='navbar'>
+        <%# link_to("mod", :controller=>"/one_shot/image", :action=>"mod")%>
+        <%= link_to("review", :controller=>"/review")%>
+
+        <% @current_worker and @current_worker.clearance > 50 %>
+        <%= link_to("queue", {:controller=>"/one_shot/image"}) %>
+        <%= link_to("workers", {:controller=>"/one_shot/worker"}) %>
+        Funds: $<%= Peanut::Redis::Cache.capture(:duration=>300) { Turkey.adapter.availableFunds } %>
+        <% end %>
+
+        <%= link_to("logout", {:controller=>"/admin", :action=>"logout"}) %>
+      </div>
+    </div>
+    <hr />
+        
+    <div class='container'>
+      <%= yield %>
+    </div>
+  </body>
+</html>

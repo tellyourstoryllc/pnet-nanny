@@ -1,0 +1,53 @@
+<div>
+  filter by status: 
+  <% %w(pending rejected approved unclear deleted).each do |status| %>
+    <%= link_to status, {:status=>status} %>
+  <% end %>
+</div>
+
+<br />
+<%= will_paginate(@rows, :page_links=>true, :prev_label=>"« newer", :next_label=>"older »", :class=>'pagination') %>
+<br />
+
+<%=
+t = GFX::Table.new(:class=>"admin")
+t << ["","Pic", "Votes", "Score", "Status", "Callback", "App ID", "Created", "Modified"]
+@rows.each do |row|
+	table_row = []
+	table_row << row.id
+	
+  
+	table_row << link_to(image_tag(row.url, {:style=>"max-width:125px; height:auto;"}), row.url, {:target=>"_blank"})
+	
+  table_row << "#{row.pass_votes} Y / #{row.fail_votes} N"
+  
+  table_row << row.score
+
+  status_form = GFX::String.new do |f|
+  	f << form_remote_tag(:url=>{:action=>'update_photo', :id=>row.id, :field=>'status'})
+  	f << ctag('select', :name=>'value') do |ff|
+  		['approved', 'pending', 'unclear', 'rejected', 'deleted'].each do |opt|
+  			sel = row.status == opt ? 1 : nil
+  			ff << ctag('option', opt, :value=>opt, :selected=>sel)
+  		end
+  	end
+
+  	f << submit_tag('update')
+  	f << '</form>'
+  end
+	table_row << status_form
+	
+	# get callback
+	uri = URI.parse(row.callback_url)
+	table_row << uri.host.to_s
+	table_row << row.app_id
+	table_row << row.created_at.utc.strftime('%m/%e/%y %H:%M')
+	table_row << row.updated_at.utc.strftime('%m/%e/%y %H:%M')
+
+	t << table_row
+end
+
+t %>
+
+
+<%= will_paginate(@rows, :page_links=>true, :prev_label=>"« newer", :next_label=>"older »", :class=>'pagination') %>

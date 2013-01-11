@@ -1,0 +1,25 @@
+<style type="text/css">
+.true { border: 5px solid green;}
+.false { border: 5px solid red;}
+.photo { width:200px; height:220px; float:left; margin: 4px;}
+.image { width:200px; height:200px; }
+</style>
+
+<%= s = GFX::String.new
+
+l = []
+l << @worker[:id]
+l << @worker[:cid]
+l << "Score: #{@worker.info.score}"
+l << "Correct/Total: #{@worker.info.correct_votes}/#{@worker.info.total_votes}"
+s << div(:style=>'clear:both') { |d| d << l.map { |line| ctag('p', line) }.join }
+
+@bad_votes.each do |vote|
+	foto = Photo.find(vote[:photo_id])
+	s << div(:class=>"photo bad #{vote.vote}") do |d|
+		d << link_to(image_tag(foto.url, :class=>'image'), foto.url, :target=>'_blank')
+		d << "Y:#{foto.pass_votes} N:#{foto.fail_votes}"
+	end
+end
+
+s %>

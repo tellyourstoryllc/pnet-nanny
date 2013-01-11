@@ -1,0 +1,16 @@
+<%= s = GFX::String.new
+
+s << will_paginate(@workers, :page_links=>true, :prev_label=>"« prev", :next_label=>"next »", :class=>'pagination')
+
+s << GFX::Table.new do |t|
+	t << %w(id score correct/total cid)
+	
+	@workers.select { |w| w.info.total_votes > 0 }.sort { |a,b| a.info.score <=> b.info.score }.each do |worker|
+		t << [ link_to(worker.id, :action=>'detail', :id=>worker.id), 
+			worker.info.score, 
+			"#{worker.info.correct_votes}/#{worker.info.total_votes}",
+			worker.cid ]
+	end
+end
+
+s %>
