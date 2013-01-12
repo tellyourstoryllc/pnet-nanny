@@ -1,0 +1,28 @@
+<div class='logo pull-left' onclick="window.location='/'"></div>
+
+<ul class="nav pull-right">
+<% 
+
+items = []
+
+items << ["Review", { :controller=>'review', :action=>'index' }]
+
+if @current_worker and @current_worker.clearance > 50 
+  items << ["Logout", { :controller=>'admin', :action=>'logout' }]
+end
+
+items << "Funds: $#{Peanut::Redis::Cache.capture(:duration=>300) { Turkey.adapter.availableFunds }}"
+
+items.each do |item|
+  element, target = item
+  if target.is_a?(Hash)
+    unless target[:controller] == params[:controller] and target[:action] == params[:action]
+      %><li><%= link_to(element, target) %></li><% 
+    else
+      %><li class="active"><%= link_to(element, '#') %></li><%       
+    end
+  else
+    %><li><%= link_to(element, target) %></li><% 
+  end
+end %>
+</ul>

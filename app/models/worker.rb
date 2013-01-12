@@ -18,6 +18,10 @@ class Worker < Peanut::ActivePeanut::Base
     super
   end
 
+  def registered?
+    self.username and self.password
+  end
+
   def create_vote(decision, task_name, photo)
     photo.create_vote(decision, task_name, self)
   end

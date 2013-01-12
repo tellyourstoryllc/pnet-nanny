@@ -1,0 +1,302 @@
+@import "twitter/bootstrap";
+@import "twitter/bootstrap/responsive";
+
+// Fonts
+
+@import url(http://fonts.googleapis.com/css?family=Muli);
+@import url('http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,700,900');
+
+// Colors /////////////////////////////////////////////////////////////////////
+
+@orange: #f28316;
+@blue: #4080cf;
+@pnBlue: #e3e5f1;
+
+// Navbar /////////////////////////////////////////////////////////////////////
+
+@navbarHeight: 60px;
+@navbarBackground: @white;
+@navbarBackgroundHighlight: @white;
+@navbarLinkColorHover: @blue;
+
+.navbar {
+  font-family: 'Source Sans Pro', sans-serif;
+  .nav > li > a { 
+    color: @gray;
+    text-shadow: none; 
+  }
+
+  .logo {
+    padding-right: 40px;
+  }
+}
+
+.navbar-inner {
+  .box-shadow(none);
+}
+
+// Body ///////////////////////////////////////////////////////////////////////
+
+@textColor: @gray;
+@linkColor: @orange;
+
+@headingsColor: @blue;
+
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+  margin-top: @navbarHeight;
+}
+
+h1, h2, h3 {
+  font-weight: normal;
+}
+
+#main {
+  width:1200px;
+  padding: 0;
+  background-color: transparent;
+  background-size: auto;
+  background-attachment: scroll;
+  background-origin: padding-box;
+  height: 100%;
+  min-height: 100%;
+}
+
+#footer {
+  padding: 10px;
+  color: @black;
+}
+
+.popover-inner {
+  background: @pnBlue;
+}
+
+.popover-title {
+  background: @pnBlue;
+}
+
+.hero-unit {
+  color: @white;
+  font-family: 'Syncopate', sans-serif;
+  background: asset-url('pnet_office_big.png') repeat-x 0 0;   
+  background-color: darken(@white, 15%);
+  background-position: center;
+  .border-radius(16px);
+
+  h1 { 
+    font-size: 40px; 
+    text-shadow: 2px 2px 4px @gray;
+  }
+  img { .border-radius(8px); }
+} 
+
+div.logo {
+  background: asset-url('logo.png') no-repeat 0 0; 
+  width: 250px;
+  height: 52px;
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2) {
+  div.logo {
+    background-image: asset-url('logo@2x.png');
+    background-size: 250px 52px;
+  }
+}
+
+div.lead {
+  padding: 20px 0 10px 0;
+  h1, h2, h3 { 
+    color: @orange;
+  }
+}
+
+#footer {
+  background-image: asset-url("white-30.png");
+  background-color: transparent;
+  background-size: auto;
+  background-attachment: scroll;
+  background-origin: padding-box;
+  height: 100%;
+
+  a {
+    display: block;
+    color: @grayLight
+  }
+
+  h1, h2, h3 {
+    color: @gray;
+  }
+}
+
+#copyright {
+  text-align: right;
+}
+
+#mainCarousel {
+  width: 1200px;
+  position: relative;
+
+  #productSubtitle {
+    font-size: 20px;
+    color: @white;
+    font-family: 'Times', serif;
+  }
+
+  #aboutTitle {
+    position: absolute;
+    top: 140px;
+    font-size: 48px;
+    color: @black;
+    width: 100%;
+    text-align: center;
+    text-shadow: 0px 2px 8px @white;
+    font-weight: bold;
+  }
+
+  #aboutSubtitle {
+    position: absolute;
+    bottom: 100px;
+    font-size: 24px;
+    line-height: 30px;
+    color: @white;
+    width: 100%;
+    text-align: center;
+    text-shadow: 0px 2px 5px @black;
+  }
+}
+
+.carouselContent {
+  position: absolute;
+  bottom: 30px;
+  width: 100%;
+  text-align: center;
+}
+
+.carouselBreadcrumbs {
+  position: absolute;
+  bottom: 15px;
+  right: 30px;
+}
+
+.pageHeader {
+  width: 1200px;
+  position: relative;
+  margin-bottom: 20px;
+
+  .headerBackground {
+  }
+
+  .headerContent {
+
+    h1, h2, h3 {
+      color: @white;
+    }
+
+    position: absolute;
+    color: @white;
+    top: 20px;
+    width: 600px;
+    padding-left: 20px;
+  }
+
+  .headerImage {
+    position: absolute;
+    top: 0px;
+    left: 650px;
+    width: 445px;
+    height: 230px;
+  }
+}
+
+.about_us {
+  .portrait {
+    margin: 10px;
+    .border-radius(8px);
+    .box-shadow(0px 5px 5px @gray);
+  }
+}
+
+div.investor {
+  padding: 0 0 15px 0;
+
+  img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+    .border-radius(8px);
+    .box-shadow(0px 5px 5px @gray);
+
+  }
+
+  .name {
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .bio {
+    font-size: 12px;
+    text-align: center;
+  }
+}
+
+div#jobs {
+
+  div.job {
+    #gradient > .vertical(#fff, #f3f5f7);
+    margin-top: -8px;
+    padding: 14px;
+    border: 1px solid #bbb;
+  }
+
+  #jobs_positions {
+
+    border: 1px solid #bbb;
+    padding: 10px;
+    margin: 0 0 30px 0;
+    background: asset-url('diamond_pattern.png') repeat 0 0;   
+    background-position: center;
+
+    li {
+      font-size: 18px;
+      line-height: 24px;
+      a {color: @blue; }
+    }
+  }
+
+  #jobs_perks {
+    padding: 10px;
+    #gradient > .vertical(#f6f4ec, @white);
+    .box-shadow(0px 5px 8px @gray);
+
+    li {
+      font-size: 18px;
+      line-height: 24px;
+    }
+  }
+}
+
+div#mailingList {
+  text-align: center;
+  form {
+    margin: 10px 0;
+  }
+  label {
+    font-size: 18px;
+    margin: 0 10px;
+  }
+
+  input {
+    font-family: 'Muli', sans-serif;
+    font-size: 20px;
+    margin: 0 10px;
+    height: 30px;
+    color: @blue;
+  }
+}
+
+div#mailingError {
+  color: @red;
+  font-size: 20px;
+  
+}

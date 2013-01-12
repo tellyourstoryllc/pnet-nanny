@@ -4,6 +4,7 @@ class MturkController < ApplicationController
   layout 'mturk'    
   before_filter :print_session
   before_filter :identify_worker
+  before_filter :require_yummy_cookie
 
   def review
 

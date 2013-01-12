@@ -3,6 +3,8 @@ require 'mechanize'
 
 class ReviewController < ApplicationController
 
+  before_filter :require_yummy_cookie
+  
   def index
     page = params[:page] || 1
     per_page = params[:pp] || 25

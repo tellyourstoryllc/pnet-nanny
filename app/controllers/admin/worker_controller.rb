@@ -1,6 +1,6 @@
 require 'will_paginate'
 
-class OneShot::WorkerController < AdminController
+class Admin::WorkerController < AdminController
 
   def index
     page = params[:page] || 1

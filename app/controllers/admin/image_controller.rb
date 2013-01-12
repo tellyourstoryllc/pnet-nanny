@@ -1,7 +1,7 @@
 require 'will_paginate'
 require 'mechanize'
 
-class OneShot::ImageController < AdminController
+class Admin::ImageController < AdminController
 
   def index
     page = params[:page] || 1

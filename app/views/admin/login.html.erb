@@ -1,0 +1,9 @@
+<% if @current_worker and @current_worker.registered? %>
+
+<% else %>
+  <%= form_tag(:action=>'login') %>
+  <div>username: <%= text_field_tag('username', '', :size=>9) %></div>
+  <div>password: <%= password_field_tag('password', '', :size=>8) %></div>
+  <div><%= submit_tag('Sign in') %></div>
+  </form>
+<% end %>

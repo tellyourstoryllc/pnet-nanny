@@ -18,7 +18,7 @@ class Turkey
     def adapter
       @@mturk ||= begin
         if Settings.get('turk_environment') == 'sandbox'
-          requester = Amazon::WebServices::MechanicalTurkRequester.new(:UseSSL=>false, :Transport=>:REST, :SoftwareName=>'PerceptualNet', :Host=>'sandbox')
+          requester = Amazon::WebServices::MechanicalTurkRequester.new(:UseSSL=>true, :Transport=>:REST, :SoftwareName=>'PerceptualNet', :Host=>'sandbox')
         else
           requester = Amazon::WebServices::MechanicalTurkRequester.new(:UseSSL=>true, :Transport=>:REST, :SoftwareName=>'PerceptualNet', :Host=>'production')
         end
