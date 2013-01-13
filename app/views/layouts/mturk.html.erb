@@ -1,39 +1,57 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Perceptual Networks</title>
+  <%= stylesheet_link_tag "application", :media => "all" %>
+  <%= csrf_meta_tags %>
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
-  <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<title>Foto Review</title>
+  <% if defined? @content_for_javascript %>
+  <script type="text/javascript">
+  <%= @content_for_javascript %>
+  </script>
+  <% end %>
 
-	<!--- Blueprint CSS Framework -->
-  <%= stylesheet_link_tag "blueprint/screen.css", :media => "screen, projection" %>
-  <%= stylesheet_link_tag "blueprint/print.css", :media => "print" %>
-	<!--[if IE]>
-    <%= stylesheet_link_tag "blueprint/ie.css", :media => "screen, projection" %>
-	<![endif]-->
+  <% if defined? @content_for_css %>
+  <style type="text/css">
+  <%= @content_for_css %>
+  </style>
+  <% end %>
 
-	<!-- Homepage CSS -->
-  <%= stylesheet_link_tag "site.css", :type=>'text/css', :media => "screen, projection" %>
-	<%= javascript_include_tag "application" %>
+</head>
+<body>
 
-	<% if defined? @content_for_javascript %>
-		<script type="text/javascript">
-		<%= @content_for_javascript %>
-		</script>
-	<% end %>
-
-	<% if defined? @content_for_css %>
-		<style type="text/css">
-		<%= @content_for_css %>
-		</style>
-	<% end %>
-
-	<%= yield :head %>
-  </head>
-  <body>        
-    <div class='container'>
-      <%= yield %>
+<% if @direct_view %>
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+          <%= render 'layouts/navigation' %>
+        <div class="nav-collapse">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+        </div>
+      </div>
     </div>
-  </body>
+  </div>
+<% end %>
+
+  <% flash.each do |type, msg| %>
+    <div id="flash_<%= type %>" class="flash"><%=msg%></div>
+  <% end %>
+  <%= yield %>
+
+  <div id="turk_main" class="container">
+    <%= yield %>
+  </div>
+
+  <div id="footer" class="container">
+    <%#= render 'layouts/footer' %>
+  </div>
+
+</div>
+
+  <%= javascript_include_tag "application" %>
+</body>
 </html>

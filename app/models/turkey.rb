@@ -2,7 +2,7 @@
 
 require 'ruby-aws'
 
-# from https://forums.aws.amazon.com/thread.jspa?threadID=16066:
+# FYI. From https://forums.aws.amazon.com/thread.jspa?threadID=16066:
 # "The SDK for Ruby allows you to call any WSDL operation directly against the MechanicalTurkRequester object even though the 
 # method has not been explicitly defined. For web service methods that utilize paging, the developer can append an "All" to 
 # the method name to automatically get all the results without calling paging operations.""
@@ -18,9 +18,9 @@ class Turkey
     def adapter
       @@mturk ||= begin
         if Settings.get('turk_environment') == 'sandbox'
-          requester = Amazon::WebServices::MechanicalTurkRequester.new(:UseSSL=>true, :Transport=>:REST, :SoftwareName=>'PerceptualNet', :Host=>'sandbox')
+          requester = Amazon::WebServices::MechanicalTurkRequester.new(:UseSSL=>true, :Transport=>:REST, :SoftwareName=>'PNet', :Host=>'sandbox')
         else
-          requester = Amazon::WebServices::MechanicalTurkRequester.new(:UseSSL=>true, :Transport=>:REST, :SoftwareName=>'PerceptualNet', :Host=>'production')
+          requester = Amazon::WebServices::MechanicalTurkRequester.new(:UseSSL=>true, :Transport=>:REST, :SoftwareName=>'PNet', :Host=>'production')
         end
         requester.set_log LOG_FILE
         requester

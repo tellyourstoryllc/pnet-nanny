@@ -1,4 +1,5 @@
 require 'uri'
+require 'httparty'
 
 class PhotoApiController < ApiController
   
@@ -9,31 +10,39 @@ class PhotoApiController < ApiController
       # verify url and callback url
       if regexp = URI::regexp and params[:url] =~ regexp and params[:callback_url] =~ regexp
 
-        unless p = Photo.find_by_url(params[:url])
-          p = Photo.new
-          p.url = params[:url]
-          p.save
-        end
+        # make sure we can "see" the photo
+        response = HTTParty.get(params[:url])
 
-        p.min_votes = params[:min_votes]
-        p.max_votes = params[:max_votes]
-        p.client_id = @client.id
-        p.passthru = params[:passthru] || params[:passthrough]
-        p.callback_url = params[:callback_url]
-        p.fingerprint
-        p.save
+        if response.code.to_i == 200
 
-        if tasks = [params[:tasks]].flatten
-          tasks.each do |name|
-            if t = Task.find(name)
-              p.add_task(t)
-            end
+          unless p = Photo.find_by_url(params[:url])
+            p = Photo.new
+            p.url = params[:url]
+            p.save
           end
-        else
-          p.add_task(Task.first)
-        end
 
-        render :json=>{:success=>true}, :status=>202
+          p.min_votes = params[:min_votes]
+          p.max_votes = params[:max_votes]
+          p.client_id = @client.id
+          p.passthru = params[:passthru] || params[:passthrough]
+          p.callback_url = params[:callback_url]
+          p.fingerprint
+          p.save
+
+          if tasks = [params[:tasks]].flatten
+            tasks.each do |name|
+              if t = Task.find(name)
+                p.add_task(t)
+              end
+            end
+          else
+            p.add_task(Task.first)
+          end
+
+          render :json=>{:success=>true}, :status=>202
+        else
+          render :json=>{:error=>"unable to fetch image url", :url=>params[:url]}, :status=>404
+        end
       else
         render :json=>{:error=>"invalid url"}, :status=>400
       end      

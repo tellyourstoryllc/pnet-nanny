@@ -3,7 +3,7 @@
 
 // Fonts
 
-@import url(http://fonts.googleapis.com/css?family=Muli);
+@import url('http://fonts.googleapis.com/css?family=Muli');
 @import url('http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,700,900');
 
 // Colors /////////////////////////////////////////////////////////////////////
@@ -52,7 +52,18 @@ h1, h2, h3 {
 }
 
 #main {
-  width:1200px;
+  width:1000px;
+  padding: 0;
+  background-color: transparent;
+  background-size: auto;
+  background-attachment: scroll;
+  background-origin: padding-box;
+  height: 100%;
+  min-height: 100%;
+}
+
+#main {
+  width:800px;
   padding: 0;
   background-color: transparent;
   background-size: auto;
@@ -129,53 +140,8 @@ div.lead {
 }
 
 #copyright {
-  text-align: right;
-}
-
-#mainCarousel {
-  width: 1200px;
-  position: relative;
-
-  #productSubtitle {
-    font-size: 20px;
-    color: @white;
-    font-family: 'Times', serif;
-  }
-
-  #aboutTitle {
-    position: absolute;
-    top: 140px;
-    font-size: 48px;
-    color: @black;
-    width: 100%;
-    text-align: center;
-    text-shadow: 0px 2px 8px @white;
-    font-weight: bold;
-  }
-
-  #aboutSubtitle {
-    position: absolute;
-    bottom: 100px;
-    font-size: 24px;
-    line-height: 30px;
-    color: @white;
-    width: 100%;
-    text-align: center;
-    text-shadow: 0px 2px 5px @black;
-  }
-}
-
-.carouselContent {
-  position: absolute;
-  bottom: 30px;
-  width: 100%;
   text-align: center;
-}
-
-.carouselBreadcrumbs {
-  position: absolute;
-  bottom: 15px;
-  right: 30px;
+  color: @grayLight;
 }
 
 .pageHeader {
@@ -216,63 +182,16 @@ div.lead {
   }
 }
 
-div.investor {
-  padding: 0 0 15px 0;
-
-  img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 10px;
-    .border-radius(8px);
-    .box-shadow(0px 5px 5px @gray);
-
-  }
-
-  .name {
-    text-align: center;
-    font-weight: bold;
-  }
-
-  .bio {
-    font-size: 12px;
-    text-align: center;
-  }
-}
-
-div#jobs {
-
-  div.job {
-    #gradient > .vertical(#fff, #f3f5f7);
-    margin-top: -8px;
-    padding: 14px;
-    border: 1px solid #bbb;
-  }
-
-  #jobs_positions {
-
-    border: 1px solid #bbb;
-    padding: 10px;
-    margin: 0 0 30px 0;
-    background: asset-url('diamond_pattern.png') repeat 0 0;   
-    background-position: center;
-
-    li {
-      font-size: 18px;
-      line-height: 24px;
-      a {color: @blue; }
-    }
-  }
-
-  #jobs_perks {
-    padding: 10px;
-    #gradient > .vertical(#f6f4ec, @white);
-    .box-shadow(0px 5px 8px @gray);
-
-    li {
-      font-size: 18px;
-      line-height: 24px;
-    }
+div#login {
+  background: @pnBlue;
+  width: 200px;
+  padding: 10px;
+  text-align: right;
+  .border-radius(8px);
+  .box-shadow(0px 5px 5px @gray);
+  margin: auto;  
+  input {
+    width: 100px;
   }
 }
 

@@ -1,0 +1,20 @@
+<%== x = Markup.new
+
+x.h2('Submit Image URL for Review')
+x.div { 
+  x/ form_tag
+  x/ 'URL: '
+  x/ text_field_tag(:url) 
+  x/ submit_tag('Submit', :name=>'submit') 
+  x/ '</form>'
+}
+
+if @result
+  x.div(:name=>:response) {
+    x.h3 @response.code.inspect
+    x.pre @response.inspect[0..500]
+    x.pre @result.inspect[0..500]
+  }
+end
+
+x %>

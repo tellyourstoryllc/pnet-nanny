@@ -39,7 +39,6 @@ class ApiController < ApplicationController
 
     if client_token = params[:api_key] || params[:key]
       @client = Client.client_for(client_token)
-      @scene[:client] = @client
     end
 
     if @client

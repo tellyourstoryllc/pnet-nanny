@@ -41,7 +41,6 @@ gem 'kramdown'
 
 gem 'builder'
 
-gem 'mechanize'
 gem 'httparty'
 
 # To use ActiveModel has_secure_password

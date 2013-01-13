@@ -77,12 +77,12 @@ class Photo < Peanut::ActivePeanut::Base
       # find the extension
       /.+(\.\w+)$/ =~ url
       extension = $1 || '.tmp'
-      filename = Rails.root + '/tmp/' + Peanut::Toolkit.hash(url) + extension
+      filename = "#{Rails.root}/tmp/#{Peanut::Toolkit.hash(url)}#{extension}"
 
       if File.exists?(filename)
         return filename
       elsif create_if_needed and data = Net::HTTP.get(URI.parse(url))
-        File.open(filename, 'w') { |f| f.write(data) }
+        File.open(filename, 'wb') { |f| f.write(data) }
         return filename
       end
     end

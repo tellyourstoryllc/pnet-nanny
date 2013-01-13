@@ -35,6 +35,10 @@
     </div>
   </div>
 
+  <% flash.each do |type, msg| %>
+    <div id="flash_<%= type %>" class="flash"><%=msg%></div>
+  <% end %>
+
   <div id="main" class="container">
     <%= yield %>
   </div>

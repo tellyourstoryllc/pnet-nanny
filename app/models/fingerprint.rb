@@ -4,6 +4,8 @@
 require 'phashion'
 
 class Fingerprint < Peanut::ActivePeanut::Base
+  include Peanut::Redis::Attributes
+
   self.table_name = 'photo_fingerprints'
 
   include Peanut::Redis::Objects

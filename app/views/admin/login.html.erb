@@ -1,9 +1,11 @@
 <% if @current_worker and @current_worker.registered? %>
 
 <% else %>
+<div id="login">
   <%= form_tag(:action=>'login') %>
-  <div>username: <%= text_field_tag('username', '', :size=>9) %></div>
-  <div>password: <%= password_field_tag('password', '', :size=>8) %></div>
-  <div><%= submit_tag('Sign in') %></div>
-  </form>
+  <div>Username: <%= text_field_tag('username', '') %></div>
+  <div>Password: <%= password_field_tag('password', '') %></div>
+  <div><%= submit_tag('Login', :name=>'login') %></div>
+</form>
+</div>
 <% end %>

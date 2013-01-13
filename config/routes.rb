@@ -7,6 +7,7 @@ PNet::Nanny::Application.routes.draw do
 
   match 'review/:action(/:id)' => 'review'
   match 'one_shot/:action(/:id)' => 'admin'
+  match 'test/:action(/:id)' => 'dummy'
   
   match 'yum' => 'application#check_cookies'
 

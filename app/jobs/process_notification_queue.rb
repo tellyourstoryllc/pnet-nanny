@@ -2,7 +2,7 @@
 require 'rubygems'
 require 'daemons'
 require 'timeout'
-require 'mechanize'
+require 'httparty'
 
 ROOT = File.expand_path(File.dirname(__FILE__)+'/../../')
 project = File.basename(ROOT)
@@ -56,8 +56,7 @@ Daemons.run_proc(procname, :dir_mode => :normal, :dir=>"#{ROOT}/log/",:log_outpu
         # make the callback
         begin
           if photo.callback_url
-            agent = Mechanize.new
-            agent.post(photo.callback_url, callback_value)
+            HTTParty.post(photo.callback_url, :body=>callback_value)
           else
             puts "#{Time.now.utc}\t#{photo_id}\tNO callback_url\t#{photo.url}"
           end
