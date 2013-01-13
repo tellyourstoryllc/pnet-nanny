@@ -1,37 +1,35 @@
-<%= s = GFX::String.new
+<%== s = Markup.new
 
 @last = nil
 
-s + "#{Photo.count(:conditions=>"status = 'pending'")} photos pending."
-s + link_to('reload', nil, {:id=>'reload_link'})
-s + "<div class='clear'>"
+s.h2 "Task: #{@task.name}"
+
+s/ "#{@task.pending_photo_ids.size} photos pending."
+s/ link_to('reload', nil, {:id=>'reload_link'})
+s.div(:class=>:clear)
 
 @photos.each do |foto|
 		
-	s << div(:id=>"foto_#{foto.id}", :class=>"foto foto_#{foto.id} #{foto.status}") do |d|
+	s/ div(:id=>"foto_#{foto.id}", :class=>"foto foto_#{foto.id} #{foto.status}") {
 		case foto.status
 		when 'approved'
-			d << link_to(image_tag(foto.url, :class=>'image'), foto.url, {:target=>'_blank'} )
-			d + 'preapproved'
+			s/ link_to(image_tag(foto.url, :class=>'image'), foto.url, {:target=>'_blank'} )
+			s/ 'preapproved'
 		when 'rejected'
-			d << link_to(image_tag(foto.url, :class=>'image'), foto.url, {:target=>'_blank'} )
-			d + 'REJECTED'
+			s/ link_to(image_tag(foto.url, :class=>'image'), foto.url, {:target=>'_blank'} )
+			s/ 'REJECTED'
 		else
-			d << link_to(image_tag(foto.url, :class=>'image', :onerror=>remote_function(:url=>{:action=>'reject', :id=>foto.id, :borken=>1})), foto.url, {:target=>'_blank'} )
-			d + link_to_remote('REJECT', {:url=>{:action=>'reject', :id=>foto.id}}, {:class=>'small'} )
+			s/ link_to(image_tag(foto.url, :class=>'image', :onerror=>remote_function(:url=>{:action=>'reject', :id=>foto.id, :borken=>1})), foto.url, {:target=>'_blank'} )
+			s/ link_to_remote('REJECT', {:url=>{:action=>'reject', :id=>foto.id}}, {:class=>'small'} )
 		end
-		d + ctag('a', :href=>url_for(:action=>'approve', :id=>foto.id), :class=>'ok_link')
-	end
+		s/ ctag('a', :href=>url_for(:action=>'approve', :id=>foto.id), :class=>'ok_link')
+	}
 	
 end
 
-s + "<div class='clear'>"
-s << '<br>'*2
-s << link_to_function('APPROVE REMAINING', "$$('.ok_link').each(function(s) { new Ajax.Request(s.href); }); $('dismiss_link').remove(); new Ajax.Request('/review/next_page', { onSuccess: function(response) { window.location.reload(); } });", :id=>'dismiss_link') unless @photos.empty?
-s %>
-<%
-@content_for_css = GFX::CSS.new do |c|
-	c.set :class=>'clear', :clear=>'both'
-	c.set :class=>'foto', :float=>'left', :width=>'188px', :height=>'200px', :padding=>'2px', 'text-align'=>'center', 'line-height'=>'10px'
-	c.set :class=>'image', :width=>'180px', :height=>'180px'
-end %>
+s.div(:class=>:clear)
+s/ '<br>'*2
+s/ link_to_function('APPROVE REMAINING', "$$('.ok_link').each(function(s) { new Ajax.Request(s.href); }); $('dismiss_link').remove(); new Ajax.Request('/review/next_page', { onSuccess: function(response) { window.location.reload(); } });", :id=>'dismiss_link') unless @photos.empty?
+s 
+%>
+
