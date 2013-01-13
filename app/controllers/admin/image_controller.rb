@@ -1,5 +1,4 @@
 require 'will_paginate'
-require 'mechanize'
 
 class Admin::ImageController < AdminController
 

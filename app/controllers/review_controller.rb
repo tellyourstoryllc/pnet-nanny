@@ -1,32 +1,18 @@
 require 'will_paginate'
-require 'mechanize'
 
 class ReviewController < ApplicationController
 
   before_filter :require_yummy_cookie
-  
+  before_filter :identify_worker
+  before_filter :require_worker
+
   def index
     page = params[:page] || 1
     per_page = params[:pp] || 25
     
-    if params[:status] && %w(pending approved rejected unclear deleted).include?(params[:status])
-      conditions = ["status = ?", params[:status]]
-    else
-      conditions = ["status = ?", 'pending']
-    end
-    
-    order = "id DESC"
-    @photos = Photo.paginate(:all, :conditions=>conditions, :order=>order, :page=>page, :per_page=>per_page)
-
-    @photos.each do |foto|
-      if fp = foto.fingerprint and fingerprint = Fingerprint.lookup(fp)
-        case fingerprint.status
-        when 'approved'
-          foto.mark_approved
-        when 'rejected'
-          foto.mark_rejected
-        end
-      end
+    if @task = Task.find(params[:task]) || Task.default
+      min_id = params[:min_id] || 0
+      @photos = @task.fetch_assignments(@current_worker, min_id) 
     end
   end
 
