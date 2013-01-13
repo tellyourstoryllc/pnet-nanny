@@ -5,7 +5,7 @@ class Task
 
   include ::Peanut::Redis::Objects
 
-  list :pending_photos
+  list :pending_photo_ids
   value :hit_id
   value :hittype_id
 
@@ -98,16 +98,16 @@ class Task
   end
 
   def add_photo(photo)
-    self.photo_ids << photo.id
+    self.pending_photo_ids << photo.id
   end
 
   def remove_photo(photo)
-    self.photo_ids.delete(photo.id)
+    self.pending_photo_ids.delete(photo.id)
   end
 
   # Pick some tasks for worker to review. Returns an array of photos.
   def fetch_assignments(worker, min_id=0, turk_assignmentId=nil)
-    foto_ids = self.pending_photos.values
+    foto_ids = self.pending_photo_ids.values
     
     offset=0; x=0
     foto_ids.each do |id|
@@ -129,7 +129,8 @@ class Task
       current_offset += 1
     end
 
-    unless results.empty?
+    # Use turk_assignmentId to determine if page is being accessed by a Turkey
+    unless turk_assignmentId.nil? or results.empty?
       if self.max_hit_photo_id.nil?
         self.max_hit_photo_id = results.last.id.to_i
       elsif self.max_hit_photo_id < results.last.id.to_i
