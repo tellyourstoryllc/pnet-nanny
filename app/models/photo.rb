@@ -124,7 +124,7 @@ class Photo < Peanut::ActivePeanut::Base
   def add_task(task)
     unless self.tasks.member?(task.name)
       self.tasks << task.name
-      Task.add_photo(self)
+      task.add_photo(self)
     end
   end
 
