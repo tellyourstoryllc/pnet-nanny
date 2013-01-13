@@ -11,16 +11,10 @@ class PhotoApiController < ApiController
       if regexp = URI::regexp and params[:url] =~ regexp and params[:callback_url] =~ regexp
 
         # make sure we can "see" the photo
-        response = HTTParty.get(params[:url])
+        if response = HTTParty.get(params[:url]) and response.code.to_i == 200
 
-        if response.code.to_i == 200
-
-          unless p = Photo.find_by_url(params[:url])
-            p = Photo.new
-            p.url = params[:url]
-            p.save
-          end
-
+          p = Photo.new
+          p.url = params[:url]
           p.min_votes = params[:min_votes]
           p.max_votes = params[:max_votes]
           p.client_id = @client.id
@@ -29,7 +23,7 @@ class PhotoApiController < ApiController
           p.fingerprint
           p.save
 
-          if tasks = [params[:tasks]].flatten
+          if params[:tasks] and tasks = [params[:tasks]].flatten
             tasks.each do |name|
               if t = Task.find(name)
                 p.add_task(t)
