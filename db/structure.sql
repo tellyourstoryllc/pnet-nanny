@@ -24,9 +24,9 @@ CREATE TABLE `photos` (
   `status` enum('pending','delivering','completed','deleted') NOT NULL DEFAULT 'pending',
   `created_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `url` (`url`),
   KEY `status` (`status`,`created_at`),
-  KEY `fingerprint` (`fingerprint`)
+  KEY `fingerprint` (`fingerprint`),
+  KEY `url` (`url`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED;
 
 CREATE TABLE `schema_migrations` (
