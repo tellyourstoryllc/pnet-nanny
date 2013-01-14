@@ -6,7 +6,7 @@ class Photo < Peanut::ActivePeanut::Base
 
   list :notification_queue, :global=>true
 
-  set :tasks  # All tasks to be run on this photo
+  set :task_names  # The names of all tasks to be run on this photo
 
   set :tasks_passed
   set :tasks_failed
@@ -20,39 +20,19 @@ class Photo < Peanut::ActivePeanut::Base
   redis_attr :max_votes, :min_votes
   
   class << self
-    
-    def search_conditions(options={})
 
-      query_strings = []
-      query_hash = {}
-
-      if statuses = options[:status]
-        query_strings << 'status in (:status)'
-        query_hash[:status] = [statuses].flatten
+    def process_notification_queue
+      success = 0
+      self.notification_queue.each do |pid|
+        if foto = Photo.find(pid)
+          if response = foto.deliver_callback
+            self.notification_queue.delete(pid)
+            success += 1
+          end
+        end
       end
-
-      if min_id = options[:min_id]
-        query_strings << 'id >= :min_id'
-        query_hash[:min_id] = min_id
-      end
-
-      if min_age = options[:min_age]
-        query_strings << 'created_at <= :min_age'
-        query_hash[:min_age] = Time.now.utc - min_age.to_i
-      end
-      
-      if fp = options[:fingerprint]
-        query_strings << 'fingerprint = :fingerprint'
-        query_hash[:fingerprint] = fp        
-      end
-      
-      [query_strings.join(' AND '), query_hash]
+      success
     end
-    
-    # age is specified in days
-    def prune(age = 30)
-      self.delete_all("(created_at < DATE_SUB(NOW(), INTERVAL #{age} DAY)) AND (status != 'pending')")      
-    end    
 
     def fingerprint_url(image_url)
       begin
@@ -62,13 +42,13 @@ class Photo < Peanut::ActivePeanut::Base
           fingerprint
         end
       rescue Errno::ECONNREFUSED
-        Rails.logger.error("Error fingerprinting - connection refused to #{image_url}")
+        log_error("Error fingerprinting - connection refused to #{image_url}")
         nil
       rescue RuntimeError
-        Rails.logger.error("RuntimeError fingerprinting #{image_url}")
+        log_error("RuntimeError fingerprinting #{image_url}")
         nil
       rescue SocketError
-        Rails.logger.error("SocketError fingerprinting #{image_url}")
+        log_error("SocketError fingerprinting #{image_url}")
         nil        
       end
     end
@@ -103,6 +83,11 @@ class Photo < Peanut::ActivePeanut::Base
     super
   end
 
+  def destroy
+    tasks.each { |t| t.remove_photo(self) }
+    super
+  end
+
   def fingerprint
     self[:fingerprint] ||= begin
       if @fingerprint_attempted.nil? and self[:url] and fingerprint = Photo.fingerprint_url(self[:url])
@@ -121,15 +106,24 @@ class Photo < Peanut::ActivePeanut::Base
     end
   end
   
+  def tasks
+    task_names.members.map { |name| Task.find(name) }
+  end
+
   def add_task(task)
-    unless self.tasks.member?(task.name)
-      self.tasks << task.name
+    unless self.tasks.include?(task)
+      self.task_names << task.name
       task.add_photo(self)
     end
   end
 
+  def remove_task(task)
+    task.remove_photo(self)
+    [task_names, tasks_passed, tasks_failed, tasks_undecided].each { |s| s.delete(task.name) }
+  end
+
   def task_votes(task_name)
-    Vote.where("photo_id = :pid AND task = :task", :pid=>self.id, :task=>task_name)
+    Vote.where("photo_id = :pid AND taskname = :task", :pid=>self.id, :task=>task_name)
   end
 
   def pass_votes(task_name)
@@ -144,21 +138,22 @@ class Photo < Peanut::ActivePeanut::Base
 
   def create_vote(decision, task_name, worker)
 
-    unless vote = Vote.find_by_worker_id_and_photo_id_and_task(worker.id, self.id, task_name)
+    unless vote = Vote.find_by_worker_id_and_photo_id_and_taskname(worker.id, self.id, task_name)
       vote = Vote.new
-      vote.worker_id = worker_id
-      vote.photo_id = self.id      
+      vote.worker_id = worker.id
+      vote.photo_id = self.id   
+      vote.taskname = task_name  
     end
 
-    vote.decision = case decision
-    when 'pass', true, 'yes'
+    vote.decision = case decision.to_s
+    when 'pass', 'true', 'yes'
       'pass'
-    when 'fail', false, 'no'
+    when 'fail', 'false', 'no'
       'fail'
     end
 
     vote.save
-    self.tally_votes
+    self.tally_votes(task_name)
   end
 
   def tally_votes(task_name)
@@ -173,21 +168,21 @@ class Photo < Peanut::ActivePeanut::Base
     fail = fail_votes(task_name).size
 
     if all >= minimum_votes.to_i
-
-      Task.find(task_name).remove_photo(self)
-
       if (pass.to_f / all.to_f) * 100 >= approval_ratio.to_i
         mark_passed(task_name)
       elsif ((fail.to_f / all.to_f) * 100 >= rejection_ratio.to_i)
         mark_failed(task_name)
-      elsif total_votes >= maximum_votes.to_i
+      elsif all >= maximum_votes.to_i
         mark_unclear(task_name)
+      else
+        # No decision yet. Wait for more votes...
       end
     end
 
   end    
-    
+
   def mark_passed(task_name)
+    Task.find(task_name).remove_photo(self)
     self.tasks_passed << task_name
     self.pass_votes(task_name).update_all(:correct=>:yes)
     self.fail_votes(task_name).update_all(:correct=>:no)
@@ -195,6 +190,7 @@ class Photo < Peanut::ActivePeanut::Base
   end
   
   def mark_failed(task_name)
+    Task.find(task_name).remove_photo(self)
     self.tasks_failed << task_name
     self.pass_votes(task_name).update_all(:correct=>:no)
     self.fail_votes(task_name).update_all(:correct=>:yes)
@@ -202,20 +198,40 @@ class Photo < Peanut::ActivePeanut::Base
   end
   
   def mark_unclear
+    Task.find(task_name).remove_photo(self)
     self.tasks_undecided << task_name
     self.task_votes(task_name).update_all(:correct=>:unknown)
     self.check_task_completion
   end
 
+  # Check if *all* assigned tasks have been completed.
   def check_task_completion
     if self.status == 'pending'
       completed = self.tasks_passed.members + self.tasks_failed.members + self.tasks_undecided.members
-      if self.tasks.count > 0 and completed.count == self.tasks.count
+      if self.task_names.count > 0 and completed.count == self.task_names.count
         self.notification_queue << self.id  
         self.status = 'delivering'
         self.save
       end
     end  
   end
-    
+
+  def deliver_callback
+    passed = self.tasks_passed.members
+    failed = self.tasks_failed.members
+    undecided = self.tasks_undecided.members
+    begin
+      response = HTTParty.post(self.callback_url, :body=>{:passed=>passed, :failed=>failed, :undecided=>undecided, :passthru=>self.passthru})
+      if response.code.to_i == 200 
+        true
+      else
+        log_error "Callback failed with HTTP code {response.code}: #{self.callback_url}."
+        false
+      end
+    rescue Exception=>e
+      log_error "Callback failed: #{self.callback_url}. #{e}"
+      false
+    end
+  end
+
 end

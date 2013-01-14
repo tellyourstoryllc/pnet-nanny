@@ -5,16 +5,22 @@
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= csrf_meta_tags %>
 
-  <% if defined? @content_for_javascript %>
-  <script type="text/javascript">
-  <%= @content_for_javascript %>
-  </script>
-  <% end %>
-
   <% if defined? @content_for_css %>
   <style type="text/css">
   <%= @content_for_css %>
   </style>
+  <% end %>
+
+  <%= javascript_include_tag "application" %>
+
+  <% if defined?(@content_for_jquery) or defined?(@content_for_javascript)%>
+<script type="text/javascript">
+jQuery(document).ready(function() {
+<%== @content_for_jquery %>
+});
+
+<%== @content_for_javascript %>
+</script>
   <% end %>
 
 </head>
@@ -39,7 +45,7 @@
     <div id="flash_<%= type %>" class="flash"><%=msg%></div>
   <% end %>
 
-  <div id="main" class="container">
+  <div id="main" class="container <%= params[:controller] %>_controller <%= params[:action] %>_action">
     <%= yield %>
   </div>
 
@@ -48,11 +54,10 @@
   </div>
 
   <div id="copyright" class="container">
-    &copy 2012 Perceptual Networks, Inc.
+    &copy 2013 Perceptual Networks, Inc.
   </div>
 
 </div>
 
-  <%= javascript_include_tag "application" %>
 </body>
 </html>

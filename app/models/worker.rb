@@ -18,6 +18,10 @@ class Worker < Peanut::ActivePeanut::Base
     super
   end
 
+  def description
+    self.username ? self.username : "user #{id}"
+  end
+
   def registered?
     self.username and self.password
   end

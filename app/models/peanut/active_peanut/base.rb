@@ -7,6 +7,7 @@ module Peanut
     class Base < ActiveRecord::Base
 
       include ::Peanut::Redis::Connection
+      include ::Peanut::ErrorLog
 
       self.abstract_class = true # <--- This line MUST be first!!
 

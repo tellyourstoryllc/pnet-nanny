@@ -3,7 +3,7 @@ class Markup < Builder::XmlMarkup
   alias_method :<, :<<
 
   def append_with_leading_space(el)
-    self << ' '
+    self << "\r\n"
     self << el
   end
 

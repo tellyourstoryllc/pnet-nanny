@@ -33,6 +33,8 @@ class PhotoApiController < ApiController
             p.add_task(Task.first)
           end
 
+          Fingerprint.reconcile(p.fingerprint)
+
           render :json=>{:success=>true}, :status=>202
         else
           render :json=>{:error=>"unable to fetch image url", :url=>params[:url]}, :status=>404

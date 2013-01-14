@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::Base
 
+  include ::Peanut::ErrorLog
+  
   def check_cookies
     if cookies[:yummy]
       redirect_to params[:target] || { :controller=>'mturk', :action=>'review' }
@@ -40,6 +42,10 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  def require_worker
+    redirect_to 'http://perceptualnet.com' unless @current_worker
+  end
+
   # Log stuff here...
   def log_activity(action_label = nil)
     unless @skip_logging

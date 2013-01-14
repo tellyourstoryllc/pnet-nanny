@@ -9,6 +9,7 @@ class Peanut::RedisNut < Object
 
   include ::Peanut::Redis::Connection
   include ::Peanut::Redis::Attributes  
+  include ::Peanut::ErrorLog
 
   redis_attr :created_at
 

@@ -101,6 +101,8 @@ h1, h2, h3 {
   img { .border-radius(8px); }
 } 
 
+.clear { clear: both; }
+
 div.logo {
   background: asset-url('logo.png') no-repeat 0 0; 
   width: 250px;
@@ -174,14 +176,6 @@ div.lead {
   }
 }
 
-.about_us {
-  .portrait {
-    margin: 10px;
-    .border-radius(8px);
-    .box-shadow(0px 5px 5px @gray);
-  }
-}
-
 div#login {
   background: @pnBlue;
   width: 200px;
@@ -195,27 +189,27 @@ div#login {
   }
 }
 
-div#mailingList {
-  text-align: center;
-  form {
-    margin: 10px 0;
-  }
-  label {
-    font-size: 18px;
-    margin: 0 10px;
+div.review_controller {
+  div.foto {
+    float: left;
+    width: 188px;
+    height: 200px;
+    padding: 2px;
+    text-align: center;
+    line-height: 10px;
+
+    .image {
+      width: 180px;
+      height: 180px;
+    }
   }
 
-  input {
-    font-family: 'Muli', sans-serif;
-    font-size: 20px;
-    margin: 0 10px;
-    height: 30px;
-    color: @blue;
+  a.small {
+  }
+
+  a#approve {
+    border: 2px solid black;
   }
 }
 
-div#mailingError {
-  color: @red;
-  font-size: 20px;
-  
-}
+

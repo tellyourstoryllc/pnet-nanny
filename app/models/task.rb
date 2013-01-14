@@ -97,10 +97,12 @@ class Task
     Turkey.adapter.getHIT(:HITId => self.hit_id)
   end
 
+  # This is called by Photo.add_task. Controllers should not call this directly
   def add_photo(photo)
     self.pending_photo_ids << photo.id
   end
 
+  # This is called by Photo.remove_task. Controllers should not call this directly
   def remove_photo(photo)
     self.pending_photo_ids.delete(photo.id)
   end
