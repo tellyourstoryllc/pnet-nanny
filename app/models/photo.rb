@@ -1,4 +1,5 @@
 require 'phashion'
+require 'open-uri'
 
 class Photo < Peanut::ActivePeanut::Base
   include Peanut::Redis::Attributes
@@ -61,7 +62,7 @@ class Photo < Peanut::ActivePeanut::Base
 
       if File.exists?(filename)
         return filename
-      elsif create_if_needed and data = Net::HTTP.get(URI.parse(url))
+      elsif create_if_needed and data = open(url).read
         File.open(filename, 'wb') { |f| f.write(data) }
         return filename
       end
@@ -230,7 +231,10 @@ class Photo < Peanut::ActivePeanut::Base
     failed = self.tasks_failed.members
     undecided = self.tasks_undecided.members
     begin
-      response = HTTParty.post(self.callback_url, :body=>{:url=>self.url, :passed=>passed, :failed=>failed, :undecided=>undecided, :passthru=>self.passthru})
+      post_body = self.passthru || {}
+      post_body.merge!(:url=>self.url, :passed=>passed, :failed=>failed, :undecided=>undecided)
+
+      response = HTTParty.post(self.callback_url, :body=>post_body)
       if response.code.to_i == 200
         self.status = 'completed'
         self.save
