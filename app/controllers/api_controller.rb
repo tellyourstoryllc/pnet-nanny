@@ -26,15 +26,7 @@ class ApiController < ApplicationController
   
   #============================================================================
   # FILTERS  
-  
-  # Log stuff here...
-  def log_activity(action_label = nil, user = nil)
-    unless @skip_logging
-      action_label ||= "#{self.class.name}#{UseLog::SEPARATOR}#{params[:action]}"
-      UseLog.increment(action_label)
-    end
-  end
-  
+    
   def check_client_token
 
     if client_token = params[:api_key] || params[:key]
