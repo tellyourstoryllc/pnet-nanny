@@ -7,6 +7,12 @@ items = []
 
 items << ["Review", { :controller=>'review', :action=>'index' }]
 
+items << ["Submit Photo", { :controller=>'dummy', :action=>'submit' }]
+
+bookmarklet_code = "window.location='#{url_for(:only_path=>false, :controller=>'dummy', :action=>'submit', :submit=>'submit')}&url='+encodeURIComponent(document.location)"
+
+items << ["Bookmarklet", "javascript:#{bookmarklet_code}"]
+
 if @current_worker # and @current_worker.clearance > 50 
   items << ["Logout #{@current_worker.description}", { :controller=>'admin', :action=>'logout' }]
 end
