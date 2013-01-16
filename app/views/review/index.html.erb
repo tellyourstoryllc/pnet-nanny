@@ -5,24 +5,26 @@
 s.h2 "Task: #{@task.name}"
 s/"#{@task.pending_photo_ids.size} photos in queue."
 s.hr
-s.div(:class=>:clear)
+s.div(:class=>'clear')
 
 unless @photos.nil? or @photos.empty?
 
-	@photos.each do |foto|
-		
-		s.div(:id=>"foto_#{foto.id}", :class=>"foto foto_#{foto.id}") {
-			s/link_to(image_tag(foto.url, :class=>'image', :photo_id=>foto.id,
-				:accept_url=>url_for(:action=>:approve, :id=>foto.id),
-				:error_url=>url_for(:action=>:borken, :id=>foto.id), 
-				:id=>"foto_#{foto.id}"))
+	s.div(:id=>'foto_grid') {
+		@photos.each do |foto|
 
-			s/link_to("Reject (#{foto.id})", {:action=>'reject', :id=>foto.id}, :photo_id=>foto.id, :class=>'reject_link small', :remote=>true )
-		}
-		
-	end
+			s.div(:id=>"foto_#{foto.id}", :class=>"foto col2 foto_#{foto.id}") {
+				s/link_to(image_tag(foto.url, :class=>'image', :photo_id=>foto.id,
+					:accept_url=>url_for(:action=>:approve, :id=>foto.id),
+					:error_url=>url_for(:action=>:borken, :id=>foto.id), 
+					:id=>"foto_#{foto.id}"))
 
-	s.div(:class=>:clear)
+				s/link_to("Reject (#{foto.id})", {:action=>'reject', :id=>foto.id}, :photo_id=>foto.id, :class=>'reject_link small', :remote=>true )
+			}
+
+		end
+	}
+
+	s.div(:class=>'clear')
 	s/'<br>'*2
 	s/submit_tag('Approve Remaining', :type=>'button', :id=>'approve_button')
 
@@ -63,3 +65,13 @@ $("#approve_button").bind("click", function() {
 JQ
 
 %>
+<% @content_for_javascript = <<JS
+
+$('#foto_grid').imagesLoaded( function() {
+ $('#foto_grid').masonry({
+  itemSelector: '.foto',
+  columnWidth: 200
+ });
+});
+JS
+%> 
