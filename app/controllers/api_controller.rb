@@ -36,7 +36,7 @@ class ApiController < ApplicationController
     if @client
       Rails.logger.info "@client:#{@client.id} (#{@client.name})" 
     else
-      render_error('Invalid client') and return 
+      render_error('Invalid client', 401) and return 
     end
   end
 
