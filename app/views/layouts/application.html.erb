@@ -11,18 +11,6 @@
   </style>
   <% end %>
 
-  <%= javascript_include_tag "application" %>
-
-  <% if defined?(@content_for_jquery) or defined?(@content_for_javascript)%>
-<script type="text/javascript">
-jQuery(document).ready(function() {
-<%== @content_for_jquery %>
-});
-
-<%== @content_for_javascript %>
-</script>
-  <% end %>
-
 </head>
 <body>
 
@@ -60,4 +48,17 @@ jQuery(document).ready(function() {
 </div>
 
 </body>
+
+  <%= javascript_include_tag "application" %>
+
+  <% if defined?(@content_for_jquery) or defined?(@content_for_javascript)%>
+<script type="text/javascript">
+jQuery(document).ready(function() {
+<%== @content_for_jquery %>
+});
+
+<%== @content_for_javascript %>
+</script>
+  <% end %>
+
 </html>
