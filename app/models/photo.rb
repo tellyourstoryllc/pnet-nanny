@@ -73,6 +73,15 @@ class Photo < Peanut::ActivePeanut::Base
       end
     end
 
+    def is_valid_data?(data)
+      begin
+        image = MiniMagick::Image.read(data) and dim = image[:dimensions] and dim[0] > 0
+      # If imagemagick doesn't like the file, the data isn't valid
+      rescue MiniMagick::Invalid
+        false
+      end
+    end
+    
   end
 
   # ---------------------------------------------------------------------------
@@ -221,15 +230,16 @@ class Photo < Peanut::ActivePeanut::Base
     failed = self.tasks_failed.members
     undecided = self.tasks_undecided.members
     begin
-      response = HTTParty.post(self.callback_url, :body=>{:passed=>passed, :failed=>failed, :undecided=>undecided, :passthru=>self.passthru})
-      if response.code.to_i == 200 
+      response = HTTParty.post(self.callback_url, :body=>{:url=>self.url, :passed=>passed, :failed=>failed, :undecided=>undecided, :passthru=>self.passthru})
+      if response.code.to_i == 200
+        log_event "Callback succeeded: #{self.callback_url}", :callback
         true
       else
-        log_error "Callback failed with HTTP code {response.code}: #{self.callback_url}."
+        log_error "Callback failed with HTTP code {response.code}: #{self.callback_url}.", :callback
         false
       end
     rescue Exception=>e
-      log_error "Callback failed: #{self.callback_url}. #{e}"
+      log_error "Callback failed: #{self.callback_url}. #{e}", :callback
       false
     end
   end

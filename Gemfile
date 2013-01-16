@@ -30,6 +30,8 @@ gem 'jquery-rails'
 gem 'redis'
 gem 'redis-objects', :require => 'redis/objects'
 
+gem 'mini_magick'
+
 # Perceptual hash
 gem 'phashion'
 

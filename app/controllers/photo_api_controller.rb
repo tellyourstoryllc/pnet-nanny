@@ -1,5 +1,5 @@
 require 'uri'
-require 'httparty'
+require 'open-uri'
 
 class PhotoApiController < ApiController
   
@@ -11,7 +11,7 @@ class PhotoApiController < ApiController
       if regexp = URI::regexp and params[:url] =~ regexp and params[:callback_url] =~ regexp
 
         # make sure we can "see" the photo
-        if response = HTTParty.get(params[:url]) and response.code.to_i == 200
+        if image_data = open(params[:url]).read and Photo.is_valid_data?(image_data)
 
           p = Photo.new
           p.url = params[:url]
@@ -37,7 +37,7 @@ class PhotoApiController < ApiController
 
           render :json=>{:success=>true}, :status=>202
         else
-          render :json=>{:error=>"unable to fetch image url", :url=>params[:url]}, :status=>404
+          render :json=>{:error=>"unable to load image", :url=>params[:url]}, :status=>404
         end
       else
         render :json=>{:error=>"invalid url"}, :status=>400
