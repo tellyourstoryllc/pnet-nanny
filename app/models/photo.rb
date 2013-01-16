@@ -232,6 +232,8 @@ class Photo < Peanut::ActivePeanut::Base
     begin
       response = HTTParty.post(self.callback_url, :body=>{:url=>self.url, :passed=>passed, :failed=>failed, :undecided=>undecided, :passthru=>self.passthru})
       if response.code.to_i == 200
+        self.status = 'completed'
+        self.save
         log_event "Callback succeeded: #{self.callback_url}", :callback
         true
       else
