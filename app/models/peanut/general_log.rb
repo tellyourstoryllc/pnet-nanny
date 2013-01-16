@@ -1,10 +1,10 @@
-module Peanut::ErrorLog
+module Peanut::GeneralLog
 
   def self.log_event(description, bucket=nil, type=nil)
     unless @skip_logging
       bucket ||= self.class.name
-      UseLog.increment("#{bucket}-#{type}")
-      type ||= 'unknown'
+      type ||= 'event'
+      UseLog.increment("#{type}#{UseLog::SEPARATOR}#{bucket}")
       if type == 'error'
         Rails.logger.error("#{bucket} #{type}: #{description}")
       else
@@ -24,14 +24,15 @@ module Peanut::ErrorLog
       else
         bucket ||= self.class.name
       end
-      type ||= 'unknown'
+      type ||= 'event'
 
-      UseLog.increment("#{bucket}-#{type}")
       if type == 'error'
         Rails.logger.error("#{bucket} #{type}: #{description}")
       else
         Rails.logger.info("#{bucket} #{type}: #{description}")
       end
+
+      UseLog.increment("#{type}#{UseLog::SEPARATOR}#{bucket}")
     end
   end
 
