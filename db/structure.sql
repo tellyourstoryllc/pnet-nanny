@@ -19,7 +19,7 @@ CREATE TABLE `photo_fingerprints` (
 CREATE TABLE `photos` (
   `id` bigint(20) unsigned NOT NULL,
   `client_id` smallint(5) unsigned DEFAULT NULL,
-  `url` varchar(200) DEFAULT NULL,
+  `url` varchar(250) DEFAULT NULL,
   `fingerprint` bigint(20) unsigned DEFAULT NULL,
   `status` enum('pending','delivering','completed','deleted') NOT NULL DEFAULT 'pending',
   `created_at` datetime NOT NULL,
@@ -33,17 +33,6 @@ CREATE TABLE `schema_migrations` (
   `version` varchar(255) NOT NULL,
   UNIQUE KEY `unique_schema_migrations` (`version`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-CREATE TABLE `sessions` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `session_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `data` text COLLATE utf8_unicode_ci,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `index_sessions_on_session_id` (`session_id`),
-  KEY `index_sessions_on_updated_at` (`updated_at`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 CREATE TABLE `use_log_caches` (
   `id` int(10) unsigned NOT NULL,
