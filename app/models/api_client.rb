@@ -4,6 +4,7 @@ class ApiClient
   include HTTParty
 
   attr_accessor :response
+  cattr_accessor :host
   
   begin
     host_config = YAML.load_file("#{Rails.root}/config/host.yml")
