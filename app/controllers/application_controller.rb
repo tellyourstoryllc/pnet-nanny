@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
 
-  include ::Peanut::ErrorLog
+  include ::Peanut::GeneralLog
   
   def check_cookies
     if cookies[:yummy]
@@ -27,8 +27,6 @@ class ApplicationController < ActionController::Base
     if uid = session[:worker_id] and token = session[:token]
       if worker = Worker.find_by_id(uid) and worker.token == token
         @current_worker = worker
-      else
-        log_activity("Cookie-based worker authentication failed- id:#{uid} token:#{token}")
       end
     end
 
