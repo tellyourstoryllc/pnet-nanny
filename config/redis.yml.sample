@@ -2,16 +2,6 @@ development:
   host: 127.0.0.1
   db: 0
 
-peanut/redis/cache:
+production:
   host: 127.0.0.1
-  db: 1
-  
-# message:
-#   host: 127.0.0.1
-#   port: 6380
-#   db: 0
-
-# tag:
-#   host: 127.0.0.1
-#   port: 6380
-#   db: 1
+  db: 0
