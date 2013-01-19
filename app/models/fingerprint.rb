@@ -16,6 +16,9 @@ class Fingerprint < Peanut::ActivePeanut::Base
     def lookup(fingerprint_value)
       self.find(:first, :conditions=>["value = :fp", {:fp=>fingerprint_value} ])
     end
+
+    def reconcile(fingerprint_value)
+    end
   end
 
   #----------------------------------------------------------------------------
