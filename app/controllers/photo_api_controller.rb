@@ -11,7 +11,7 @@ class PhotoApiController < ApiController
       if regexp = URI::regexp and params[:url] =~ regexp and params[:callback_url] =~ regexp
 
         # make sure we can "see" the photo
-        if image_data = open(params[:url]).read and Photo.is_valid_data?(image_data)
+        if image_data = open(params[:url]).read and img = Photo.image_for_data(image_data)
 
           p = Photo.new
           p.url = params[:url]
@@ -21,6 +21,8 @@ class PhotoApiController < ApiController
           p.passthru = params[:passthru] || params[:passthrough]
           p.callback_url = params[:callback_url]
           p.fingerprint
+          p.width = img['dimensions'][0]
+          p.height = img['dimensions'][1]
           p.save
 
           if params[:tasks] and tasks = [params[:tasks]].flatten

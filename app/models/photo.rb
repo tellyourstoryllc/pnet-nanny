@@ -19,6 +19,7 @@ class Photo < Peanut::ActivePeanut::Base
   redis_attr :passthru
   redis_attr :callback_url
   redis_attr :max_votes, :min_votes
+  redis_attr :width, :height
   
   class << self
 
@@ -74,10 +75,11 @@ class Photo < Peanut::ActivePeanut::Base
       end
     end
 
-    def is_valid_data?(data)
+    def image_for_data(data)
       begin
         image = MiniMagick::Image.read(data) and dim = image[:dimensions] and dim[0] > 0
       # If imagemagick doesn't like the file, the data isn't valid
+        image
       rescue MiniMagick::Invalid
         false
       end
