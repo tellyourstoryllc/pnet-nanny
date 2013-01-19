@@ -9,6 +9,9 @@ gem 'mysql2'
 gem 'ruby-aws'
 gem 'aws-sdk' # AWS support
 
+# Use unicorn as the app server
+gem 'unicorn'
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
