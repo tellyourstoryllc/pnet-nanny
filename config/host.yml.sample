@@ -1,3 +1,5 @@
 development:
   url: http://local.me:3000
   
+development:
+  url: http:/nanny.perceptualnet.com
