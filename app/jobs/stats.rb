@@ -9,7 +9,7 @@ UseLog.set("photos/total", total_photos)
   sql = "select count(*) from photos where status = '#{status}' and date(created_at) = date(now())"
   result = conn.select_value(sql)
   UseLog.set("photos/#{status}", result.to_i)
-  UseLog.set("photos/#{status}_percent", (result.to_f / total_photos.to_f * 10000))
+  UseLog.set("photos/#{status}_percent", (result.to_f / total_photos.to_f * 10000)) if total_photos.to_i > 0
 end
 
 conn = Vote.connection
