@@ -77,7 +77,7 @@ class UseLog < Peanut::ActivePeanut::Base
 
       log = UseLog.retrieve_or_create(name)
       data = log.data_for(date)
-      data[:count] = value
+      data[:count] = value.to_i
       data.save
     end
 
