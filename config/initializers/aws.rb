@@ -1,3 +1,6 @@
+# Options documented here:
+# http://docs.aws.amazon.com/AWSRubySDK/latest/AWS.html#config-class_method
+
 # load the libraries
 require 'aws-sdk'
 # log requests using the default rails logger
