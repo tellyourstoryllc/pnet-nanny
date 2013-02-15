@@ -6,8 +6,8 @@ gem 'rails', '3.2.11'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'mysql2'
-gem 'ruby-aws'
 gem 'aws-sdk' # AWS support
+gem 'ruby-aws' # Needed because aws-sdk does not support mechanical turk: http://rubygems.org/gems/ruby-aws
 
 # Use unicorn as the app server
 gem 'unicorn'

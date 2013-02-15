@@ -17,7 +17,7 @@ if @current_worker # and @current_worker.clearance > 50
   items << ["Logout #{@current_worker.description}", { :controller=>'admin', :action=>'logout' }]
 end
 
-items << "Funds: $#{Peanut::Redis::Cache.capture(:duration=>300) { Turkey.adapter.availableFunds }}"
+# items << "Funds: $#{Peanut::Redis::Cache.capture(:duration=>300) { Turkey.adapter.availableFunds }}"
 
 items.each do |item|
   element, target = item

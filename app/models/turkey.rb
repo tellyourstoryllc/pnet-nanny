@@ -1,6 +1,6 @@
 # Adapter for Mechanical Turk
 
-require 'ruby-aws'
+require 'ruby-aws' # Needed because aws-sdk does not support mechanical turk: http://rubygems.org/gems/ruby-aws
 
 # FYI. From https://forums.aws.amazon.com/thread.jspa?threadID=16066:
 # "The SDK for Ruby allows you to call any WSDL operation directly against the MechanicalTurkRequester object even though the 
