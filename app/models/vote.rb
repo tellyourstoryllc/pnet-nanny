@@ -1,7 +1,7 @@
 class Vote < Peanut::ActivePeanut::Base
 
   self.table_name = 'votes'
-  attr_accessible :worker_id, :photo_id, :taskname, :decision
+  attr_accessible :worker_id, :photo_id, :taskname, :decision, :weight
   attr_accessible :status # pending, correct, incorrect
 
   belongs_to :worker, :class_name=>'Worker', :foreign_key=>'worker_id'
