@@ -1,5 +1,7 @@
 class DummyController < ApplicationController
 
+  before_filter :identify_worker
+
   def submit
     if params[:submit] and url = params[:url] and !url.blank?
       c = ApiClient.new
@@ -11,6 +13,12 @@ class DummyController < ApplicationController
   def callback
     Rails.logger.info "Callback! #{params.inspect}"
     render :json=>{:success=>true}
+  end
+
+  # Manually trigger delivery of callbacks in the queue.
+  def deliver_callbacks
+    Photo.process_notification_queue
+    redirect_to :review
   end
 
 end
