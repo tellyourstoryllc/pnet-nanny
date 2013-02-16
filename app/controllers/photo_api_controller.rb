@@ -20,7 +20,7 @@ class PhotoApiController < ApiController
           p.client_id = @client.id
           p.passthru = params[:passthru] || params[:passthrough]
           p.callback_url = params[:callback_url]
-          p.fingerprint
+          # p.fingerprint
           p.width = img['dimensions'][0]
           p.height = img['dimensions'][1]
           p.save
@@ -35,7 +35,7 @@ class PhotoApiController < ApiController
             p.add_task(Task.first)
           end
 
-          Fingerprint.reconcile(p.fingerprint)
+          # Fingerprint.reconcile(p.fingerprint)
 
           render :json=>{:success=>true}, :status=>202
         else

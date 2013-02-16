@@ -38,22 +38,22 @@ class Photo < Peanut::ActivePeanut::Base
     end
 
     def fingerprint_url(image_url)
-      begin
-        if phile = Phashion::Image.new(tempfile_for_url(image_url))
-          fingerprint = phile.fingerprint
-          delete_tempfile_for_url(image_url)
-          fingerprint
-        end
-      rescue Errno::ECONNREFUSED
-        log_error("Error fingerprinting - connection refused to #{image_url}")
-        nil
-      rescue RuntimeError
-        log_error("RuntimeError fingerprinting #{image_url}")
-        nil
-      rescue SocketError
-        log_error("SocketError fingerprinting #{image_url}")
-        nil        
-      end
+      # begin
+      #   if phile = Phashion::Image.new(tempfile_for_url(image_url))
+      #     fingerprint = phile.fingerprint
+      #     delete_tempfile_for_url(image_url)
+      #     fingerprint
+      #   end
+      # rescue Errno::ECONNREFUSED
+      #   log_error("Error fingerprinting - connection refused to #{image_url}")
+      #   nil
+      # rescue RuntimeError
+      #   log_error("RuntimeError fingerprinting #{image_url}")
+      #   nil
+      # rescue SocketError
+      #   log_error("SocketError fingerprinting #{image_url}")
+      #   nil        
+      # end
     end
     
     def tempfile_for_url(url, create_if_needed=true)
@@ -102,21 +102,21 @@ class Photo < Peanut::ActivePeanut::Base
   end
 
   def fingerprint
-    self[:fingerprint] ||= begin
-      if @fingerprint_attempted.nil? and self[:url] and fingerprint = Photo.fingerprint_url(self[:url])
-        fp = Fingerprint.lookup(fingerprint)
-        unless fp
-          fp = Fingerprint.new
-          fp.value = fingerprint
-          fp.save
-        end
-        fp.photo_ids << self.id
-        fingerprint
-      else
-        @fingerprint_attempted = true
-        nil
-      end
-    end
+    # self[:fingerprint] ||= begin
+    #   if @fingerprint_attempted.nil? and self[:url] and fingerprint = Photo.fingerprint_url(self[:url])
+    #     fp = Fingerprint.lookup(fingerprint)
+    #     unless fp
+    #       fp = Fingerprint.new
+    #       fp.value = fingerprint
+    #       fp.save
+    #     end
+    #     fp.photo_ids << self.id
+    #     fingerprint
+    #   else
+    #     @fingerprint_attempted = true
+    #     nil
+    #   end
+    # end
   end
   
   def tasks
