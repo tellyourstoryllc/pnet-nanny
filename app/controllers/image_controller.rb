@@ -1,6 +1,6 @@
 require 'will_paginate'
 
-class Admin::ImageController < AdminController
+class ImageController < AdminController
 
   def index
     page = params[:page] || 1
