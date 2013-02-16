@@ -21,7 +21,7 @@ class MturkController < ApplicationController
 
       if pics = @task.fetch_assignments(@current_worker, min_id, params[:assignmentId]) and !pics.empty?
         @photos += pics
-        session["last_#{@task.name}_photo_id"] = @photos.last.id
+        session["last_#{@task.name}_id"] = @photos.last.id
       end
     end
   end
