@@ -7,14 +7,10 @@ items = []
 
 items << ["Review", { :controller=>'review', :action=>'index' }]
 
-items << ["Submit Photo", { :controller=>'dummy', :action=>'submit' }]
+items << ["Submit Photo", :bookmarklet]
 
-bookmarklet_code = "window.location='#{url_for(:only_path=>false, :controller=>'dummy', :action=>'submit', :submit=>'submit')}&url='+encodeURIComponent(document.location)"
-
-items << ["Bookmarklet", "javascript:#{bookmarklet_code}"]
-
-if @current_worker # and @current_worker.clearance > 50 
-  items << ["Logout #{@current_worker.description}", { :controller=>'admin', :action=>'logout' }]
+if @current_worker and @current_worker.registered?
+  items << ["Logout (#{@current_worker.description})", { :controller=>'admin', :action=>'logout' }]
 end
 
 # items << "Funds: $#{Peanut::Redis::Cache.capture(:duration=>300) { Turkey.adapter.availableFunds }}"

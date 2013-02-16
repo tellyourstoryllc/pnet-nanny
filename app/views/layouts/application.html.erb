@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Perceptual Networks</title>
-  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= stylesheet_link_tag "application", :media => "all" %>
   <%= csrf_meta_tags %>
 
   <% if defined? @content_for_css %>
@@ -37,12 +37,12 @@
     <%= yield %>
   </div>
 
-  <div id="footer" class="container">
-    <%#= render 'layouts/footer' %>
-  </div>
-
   <div id="copyright" class="container">
     &copy 2013 Perceptual Networks, Inc.
+  </div>
+
+  <div id="footer" class="container">
+    <%= render 'layouts/footer' %>
   </div>
 
 </div>
