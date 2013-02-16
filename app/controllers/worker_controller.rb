@@ -19,10 +19,10 @@ class WorkerController < AdminController
   def register
     if params[:register] and @current_worker and !@current_worker.registered?
 
-      flash.now[:notice] = "Please enter a username" and return if params[:username].blank?
-      flash.now[:notice] = "#{params[:username]} is not available" and return if Worker.find_by_username(params[:username])
-      flash.now[:notice] = "Password is blank or not confirmed." and return if params[:password].blank? or params[:confirm_password].blank? or (params[:password] != params[:confirm_password])
-      flash.now[:notice] = "Please enter the correct registration code." and return if params[:code] != 'phosaigon'
+      flash[:error] = "Please enter a username" and return if params[:username].blank?
+      flash[:error] = "#{params[:username]} is not available" and return if Worker.find_by_username(params[:username])
+      flash[:error] = "Password is blank or not confirmed." and return if params[:password].blank? or params[:confirm_password].blank? or (params[:password] != params[:confirm_password])
+      flash[:error] = "Please enter the correct registration code." and return if params[:code] != 'phosaigon'
 
       @current_worker.username = params[:username];
       @current_worker.password = params[:password];
