@@ -130,10 +130,10 @@ div.lead {
   background-attachment: scroll;
   background-origin: padding-box;
   height: 100%;
+  text-align: center;
 
   a {
-    display: block;
-    color: @grayLight
+    color: @blue
   }
 
   h1, h2, h3 {
@@ -187,6 +187,27 @@ div#login {
   input {
     width: 100px;
   }
+}
+
+div#register {
+  background: @pnBlue;
+  width: 300px;
+  padding: 10px;
+  text-align: right;
+  .border-radius(8px);
+  .box-shadow(0px 5px 5px @gray);
+  margin: 10px auto 0 auto;
+  input {
+    width: 100px;
+  }
+}
+
+div.flash {
+  background: @orange;  
+  color: @white;
+  text-align: center;
+  font-size: 24px;
+  padding: 10px;
 }
 
 div.review_controller {
