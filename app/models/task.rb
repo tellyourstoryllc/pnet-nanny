@@ -11,7 +11,7 @@ class Task
 
   value :max_hit_photo_id   # The largest photo ID that has been assigned to a Turk
 
-  attr_accessor :id, :view, :hit_properties, :hittype_properties, :instructions
+  attr_accessor :id, :view, :hit_properties, :hittype_properties, :instructions, :description
   attr_accessor :photos_per_hit, :queue_delay
 
   def name
@@ -26,6 +26,7 @@ class Task
       elsif attributes = @@config[name]
         t = self.new
         t.id = name
+        t.description = attributes['description']
         t.view = attributes['view']
         t.hit_properties = attributes['hit']
         t.hittype_properties = attributes['hittype']
@@ -67,7 +68,7 @@ class Task
     question = <<-TEXT
 <?xml version="1.0"?>
 <ExternalQuestion xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2006-07-14/ExternalQuestion.xsd">
-<ExternalURL>http://mod.perceptualnet.com/mturk/review?task=#{self.id}&min_id=#{min_photo_id}</ExternalURL> 
+<ExternalURL>http://nanny.perceptualnet.com/mturk/review?task=#{self.id}&min_id=#{min_photo_id}</ExternalURL> 
 <FrameHeight>800</FrameHeight>
 </ExternalQuestion>  
     TEXT
@@ -131,7 +132,9 @@ class Task
       current_offset += 1
     end
 
-    # Use turk_assignmentId to determine if page is being accessed by a Turkey
+    # The following bit creates a new hit if needed:
+
+    # Use turk_assignmentId to determine if page is being accessed by a Turkey or not.
     unless turk_assignmentId.nil? or results.empty?
       if self.max_hit_photo_id.nil?
         self.max_hit_photo_id = results.last.id.to_i
