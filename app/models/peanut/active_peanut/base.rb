@@ -13,11 +13,6 @@ module Peanut
 
       class_attribute :json_object_type_name
 
-      def self.next_id
-        @counter ||= ::Redis::Counter.new("id_counter_#{self.table_name}", Peanut::Redis::Connection.connection_for(self))
-        @counter.increment.to_i
-      end
-
       def self.json_object_type
         self.json_object_type_name || self.name.downcase.gsub(':','_')
       end
@@ -33,7 +28,6 @@ module Peanut
       before_save :do_before_save
 
       def do_before_save
-        self[:id] ||= self.class.next_id
         self[:created_at] ||= Time.now.utc if self.respond_to?(:created_at)
       end
 
