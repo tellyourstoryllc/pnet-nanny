@@ -21,7 +21,8 @@ class Task
   class << self
 
     def find(name)
-      if task = @@tasks[name.to_s]
+      name = name.to_s
+      if task = @@tasks[name]
         task
       elsif attributes = @@config[name]
         t = self.new
@@ -33,7 +34,7 @@ class Task
         t.photos_per_hit = attributes['photos_per_hit']
         t.queue_delay = attributes['queue_delay']
         t.instructions = File.read("#{Rails.root}/config/mturk/#{attributes['instructions']}")
-        @@tasks[name.to_s] = t
+        @@tasks[name] = t
       end
     end
 
