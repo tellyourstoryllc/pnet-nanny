@@ -5,7 +5,7 @@ CREATE TABLE `clients` (
   `status` enum('active','disabled','deleted') DEFAULT NULL,
   `level` smallint(5) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `photo_fingerprints` (
   `id` bigint(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -14,7 +14,7 @@ CREATE TABLE `photo_fingerprints` (
   `photo_count` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `fingerprint` (`value`)
-) ENGINE=MyISAM AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `photos` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -27,7 +27,7 @@ CREATE TABLE `photos` (
   KEY `status` (`status`,`created_at`),
   KEY `fingerprint` (`fingerprint`),
   KEY `url` (`url`)
-) ENGINE=MyISAM AUTO_INCREMENT=34 DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED;
 
 CREATE TABLE `schema_migrations` (
   `version` varchar(255) NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE `use_log_categories` (
   `description` varchar(250) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `parent_id` (`parent_id`,`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `use_log_data` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -59,7 +59,7 @@ CREATE TABLE `use_log_data` (
   `count` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `date` (`date`,`category_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `votes` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -71,7 +71,7 @@ CREATE TABLE `votes` (
   `weight` tinyint(3) unsigned NOT NULL DEFAULT '1',
   `correct` enum('pending','yes','no','unknown') NOT NULL DEFAULT 'pending',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=51 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE `workers` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -88,6 +88,6 @@ CREATE TABLE `workers` (
   `rating` smallint(5) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `turk_id` (`turk_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO schema_migrations (version) VALUES ('20130111210021');
