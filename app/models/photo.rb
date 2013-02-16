@@ -177,9 +177,9 @@ class Photo < Peanut::ActivePeanut::Base
     approval_ratio = Settings.get('approval_percentage') || 80
     rejection_ratio = Settings.get('reject_percentage') || 60
 
-    all = task_votes(task_name).size.map { |v| v.weight.to_i }.reduce(:+)
-    pass = pass_votes(task_name).size.map { |v| v.weight.to_i }.reduce(:+)
-    fail = fail_votes(task_name).size.map { |v| v.weight.to_i }.reduce(:+)
+    all = task_votes(task_name).map { |v| v.weight.to_i }.reduce(:+)
+    pass = pass_votes(task_name).map { |v| v.weight.to_i }.reduce(:+)
+    fail = fail_votes(task_name).map { |v| v.weight.to_i }.reduce(:+)
 
     if all >= minimum_votes.to_i
       if (pass.to_f / all.to_f) * 100 >= approval_ratio.to_i
