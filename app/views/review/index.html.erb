@@ -2,7 +2,7 @@
 
 @last = nil
 
-s.h2 "Task: #{@task.name}"
+s.h2 "Task: #{@task.description}"
 s/"#{@task.pending_photo_ids.size} photos in queue."
 s.hr
 s.div(:class=>'clear')
@@ -16,7 +16,7 @@ unless @photos.nil? or @photos.empty?
 				s/link_to(image_tag(foto.url, :class=>'image', :photo_id=>foto.id,
 					:accept_url=>url_for(:action=>:approve, :id=>foto.id),
 					:error_url=>url_for(:action=>:borken, :id=>foto.id), 
-					:id=>"foto_#{foto.id}"))
+					:id=>"foto_#{foto.id}"), foto.url)
 
 				s/link_to("Reject (#{foto.id})", {:action=>'reject', :id=>foto.id}, :photo_id=>foto.id, :class=>'reject_link small', :remote=>true )
 			}
