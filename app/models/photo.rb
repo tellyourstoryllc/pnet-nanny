@@ -23,10 +23,11 @@ class Photo < Peanut::ActivePeanut::Base
   
   class << self
 
+    # Deliver pending callbacks to the clients.
     def process_notification_queue
       success = 0
       self.notification_queue.each do |pid|
-        if foto = Photo.find(pid)
+        if foto = self.find(pid)
           if response = foto.deliver_callback
             self.notification_queue.delete(pid)
             success += 1
@@ -154,7 +155,8 @@ class Photo < Peanut::ActivePeanut::Base
       vote = Vote.new
       vote.worker_id = worker.id
       vote.photo_id = self.id   
-      vote.taskname = task_name  
+      vote.taskname = task_name 
+      vote.weight = 1 + 4*worker.clearance.to_i
     end
 
     vote.decision = case decision.to_s
