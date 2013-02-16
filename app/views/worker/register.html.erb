@@ -1,0 +1,13 @@
+<% if @current_worker and @current_worker.registered? %>
+
+<% else %>
+<div id="register">
+  <%= form_tag(:action=>'register') %>
+  <div>Username: <%= text_field_tag('username', '') %></div>
+  <div>Password: <%= password_field_tag('password', '') %></div>
+  <div>Confirm password: <%= password_field_tag('confirm_password', '') %></div>
+  <div>Registration code: <%= text_field_tag('code', '') %></div>
+  <div><%= submit_tag('Register', :name=>'register') %></div>
+</form>
+</div>
+<% end %>

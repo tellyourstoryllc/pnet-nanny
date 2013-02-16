@@ -4,7 +4,7 @@ class ReviewController < ApplicationController
 
   before_filter :require_yummy_cookie
   before_filter :identify_worker
-  before_filter :require_worker
+  before_filter :require_user
   before_filter :identify_task
 
   def index

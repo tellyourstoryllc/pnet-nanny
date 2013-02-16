@@ -41,7 +41,11 @@ class ApplicationController < ActionController::Base
   end
   
   def require_worker
-    redirect_to 'http://perceptualnet.com' unless @current_worker
+    redirect_to 'http://zombo.com' unless @current_worker
+  end
+
+  def require_user
+    redirect_to(:login) unless @current_worker and @current_worker.clearance.to_i > 0
   end
 
   # Log stuff here...
