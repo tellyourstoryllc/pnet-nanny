@@ -18,7 +18,7 @@ unless @photos.nil? or @photos.empty?
 					:error_url=>url_for(:action=>:borken, :id=>foto.id), 
 					:id=>"foto_#{foto.id}"), foto.url)
 
-				s/link_to("Reject (#{foto.id})", {:action=>'reject', :id=>foto.id}, :photo_id=>foto.id, :class=>'reject_link small', :remote=>true )
+				s/link_to("Reject", {:action=>'reject', :id=>foto.id}, :photo_id=>foto.id, :class=>'reject_link small', :remote=>true )
 			}
 
 		end
@@ -60,6 +60,11 @@ $("#approve_button").bind("click", function() {
 		jQuery.ajax($(this).attr('accept_url'));
 		$('#foto_'+ $(this).attr('photo_id')).remove();
 	});
+
+setTimeout(function() {
+	location.reload(true);
+	}, 5000);
+
 });
 
 JQ
