@@ -244,7 +244,7 @@ class Photo < Peanut::ActivePeanut::Base
       if response.code.to_i == 200
         self.status = 'completed'
         self.save
-        log_event "Callback succeeded: #{self.callback_url}", :callback
+        log_event "Callback succeeded: #{self.callback_url} #{post_body}", :callback
         true
       else
         log_error "Callback failed with HTTP code {response.code}: #{self.callback_url}.", :callback
