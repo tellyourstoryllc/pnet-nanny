@@ -18,6 +18,8 @@ unless @photos.nil? or @photos.empty?
 					:error_url=>url_for(:action=>:borken, :id=>foto.id), 
 					:id=>"foto_#{foto.id}"), foto.url)
 
+				s.div(foto.description, :class=>'description') if foto.description
+				s/link_to("Link", foto.info_url, :class=>'foto_link small') if foto.info_url
 				s/link_to("Reject", {:action=>'reject', :id=>foto.id}, :photo_id=>foto.id, :class=>'reject_link small', :remote=>true )
 			}
 

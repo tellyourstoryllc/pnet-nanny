@@ -20,7 +20,9 @@ class Photo < Peanut::ActivePeanut::Base
   redis_attr :callback_url
   redis_attr :max_votes, :min_votes
   redis_attr :width, :height
-  
+  redis_attr :description
+  redis_attr :info_url
+
   class << self
 
     # Deliver pending callbacks to the clients.
