@@ -4,9 +4,9 @@ items = []
 
 items << ["Deliver callbacks", { :controller=>'dummy', :action=>'deliver_callbacks' }]
 
-bookmarklet_code = "window.location='#{url_for(:only_path=>false, :controller=>'dummy', :action=>'submit', :submit=>'submit')}&url='+encodeURIComponent(document.location)"
+# bookmarklet_code = "window.location='#{url_for(:only_path=>false, :controller=>'dummy', :action=>'submit', :submit=>'submit')}&url='+encodeURIComponent(document.location)"
 
-items << ["Bookmarklet", "javascript:#{bookmarklet_code}"]
+# items << ["Bookmarklet", "javascript:#{bookmarklet_code}"]
 
 items.each do |item|
   element, target = item
