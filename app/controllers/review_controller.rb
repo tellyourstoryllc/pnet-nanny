@@ -14,7 +14,7 @@ class ReviewController < ApplicationController
     
     if @task
       min_id = params[:min_id] || 0
-      @photos = @task.fetch_assignments(@current_worker, min_id) 
+      @photos = @task.fetch_assignments(@current_worker, min_id)[0..per_page.to_i]
     end
   end
 
@@ -42,6 +42,12 @@ class ReviewController < ApplicationController
     render :text=>''
   end
   
+    # Manually trigger delivery of callbacks in the queue.
+  def deliver_callbacks
+    Photo.process_notification_queue
+    render :text=>''
+  end
+
   protected 
   
   def identify_task

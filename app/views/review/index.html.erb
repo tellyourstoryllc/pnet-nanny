@@ -63,9 +63,11 @@ $("#approve_button").bind("click", function() {
 		$('#foto_'+ $(this).attr('photo_id')).remove();
 	});
 
-setTimeout(function() {
-	location.reload(true);
-	}, 5000);
+	jQuery.ajax('#{url_for(:action=>:deliver_callbacks, :only_path=>false)}');
+
+	setTimeout(function() {
+		location.reload(true);
+	}, 3000);
 
 });
 
