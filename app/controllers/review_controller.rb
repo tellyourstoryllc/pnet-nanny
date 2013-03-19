@@ -15,6 +15,7 @@ class ReviewController < ApplicationController
     if @task
       min_id = params[:min_id] || 0
       @photos = @task.fetch_assignments(@current_worker, min_id)[0..per_page.to_i]
+      Photo.process_notification_queue if @photos.nil? or @photos.empty?
     end
   end
 
