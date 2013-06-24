@@ -19,4 +19,3 @@ rerun.txt
 pickle-email-*.html
 .rvmrc
 **.DS_Store
-Gemfile.lock
