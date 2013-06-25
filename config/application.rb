@@ -60,6 +60,8 @@ module PNet
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 
+    # Use native format `db/structure.sql`.
+    config.active_record.schema_format = :sql
 end
 end
 end
