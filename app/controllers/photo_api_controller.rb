@@ -10,46 +10,38 @@ class PhotoApiController < ApiController
       # verify url and callback url
       if regexp = URI::regexp and params[:url] =~ regexp and params[:callback_url] =~ regexp
 
-        # make sure we can "see" the photo
-        if image_data = open(params[:url]).read and img = Photo.image_for_data(image_data)
+        p = Photo.new
+        p.url = params[:url]
+        p.min_votes = params[:min_votes]
+        p.max_votes = params[:max_votes]
+        p.client_id = @client.id
+        p.passthru = params[:passthru] || params[:passthrough]
+        p.callback_url = params[:callback_url]
+        p.description = params[:description]
+        p.url = params[:url]
 
-          p = Photo.new
-          p.url = params[:url]
-          p.min_votes = params[:min_votes]
-          p.max_votes = params[:max_votes]
-          p.client_id = @client.id
-          p.passthru = params[:passthru] || params[:passthrough]
-          p.callback_url = params[:callback_url]
-          p.description = params[:description]
-          p.url = params[:url]
-          
-          # p.fingerprint
-          p.width = img['dimensions'][0]
-          p.height = img['dimensions'][1]
-          p.save
+        # p.fingerprint
+        p.save
 
-          if params[:tasks] and tasks = [params[:tasks]].flatten
-            tasks.each do |name|
-              if t = Task.find(name)
-                p.add_task(t)
-              end
+        if params[:tasks] and tasks = [params[:tasks]].flatten
+          tasks.each do |name|
+            if t = Task.find(name)
+              p.add_task(t)
             end
-          else
-            p.add_task(Task.first)
           end
-
-          # Fingerprint.reconcile(p.fingerprint)
-
-          render :json=>{:success=>true}, :status=>202
         else
-          render :json=>{:error=>"unable to load image", :url=>params[:url]}, :status=>404
+          p.add_task(Task.first)
         end
+
+        # Fingerprint.reconcile(p.fingerprint)
+
+        render :json=>{:success=>true}, :status=>202
       else
         render :json=>{:error=>"invalid url"}, :status=>400
-      end      
+      end
     end
   end
-  
+
   def delete
     require_params(:url) do
       if p = Photo.find_by_url(params[:url]) and p.status == 'pending'
