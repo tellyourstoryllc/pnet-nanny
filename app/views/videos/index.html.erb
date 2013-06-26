@@ -57,3 +57,13 @@
   <p>No videos to approve.</p>
   <p><%= link_to 'Look Again', nil %></p>
 <% end %>
+
+<%
+@content_for_jquery = <<-EOJS
+  $('.videos').masonry({
+    columnWidth: 390,
+    gutter: 10,
+    itemSelector: '.video' });
+EOJS
+
+%>
