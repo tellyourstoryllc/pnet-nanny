@@ -1,0 +1,17 @@
+<h1>Add Video to Approval Queue</h1>
+
+<%= form_tag url_for(:controller => 'video_testing', :action => 'add') do %>
+  <%= label_tag 'url', 'Video URL' %>
+  <%= text_field_tag 'url', params[:url], :required => 'required', :class => 'input-xxlarge' %>
+  <%= label_tag 'thumbnail_url', 'Poster URL (Thumbnail Image)' %>
+  <%= text_field_tag 'thumbnail_url', params[:thumbnail_url], :required => 'required', :class => 'input-xxlarge' %>
+  <div>
+    <button type='submit' class='btn'>Add to Queue</button>
+  </div>
+<% end %>
+
+<% if @result %>
+  <h3>Result</h3>
+  <pre><code><%= @response.code %>
+<%= @response.inspect %></code></pre>
+<% end %>

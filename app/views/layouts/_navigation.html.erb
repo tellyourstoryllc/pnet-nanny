@@ -5,8 +5,10 @@
 
 items = []
 
-items << ["Review", { :controller=>'review', :action=>'index' }]
+items << ["Approve Videos", { :controller=>'videos', :action=>'index' }]
+items << ["Review Photos", { :controller=>'review', :action=>'index' }]
 
+items << ["Submit Video", { :controller => 'video_testing', :action => 'add' }]
 items << ["Submit Photo", :bookmarklet]
 
 if @current_worker and @current_worker.registered?

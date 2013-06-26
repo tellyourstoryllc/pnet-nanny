@@ -1,0 +1,59 @@
+<h1>Approve Videos</h1>
+<p><%= pluralize(Video.pending_video_ids.size, 'video') %> in queue.</p>
+
+<% if @videos.present? %>
+  <div class='videos masonry'>
+    <% @videos.each do |video| %>
+      <div class='masonry-brick video'>
+        <video poster='<%= video.thumbnail_url %>' preload='none' controls>
+          <source src='<%= video.url %>'>
+        </video>
+        <div class='description'><%= video.description %></div>
+        <% if video.creator_url %>
+          <div class='creator'><%= link_to 'Creator', video.creator_url %></div>
+        <% end %>
+        <% if video.info_url %>
+          <div class='info'><%= link_to 'Info', video.info_url %></div>
+        <% end %>
+        <div class='approval-controls form form-inline'>
+          <% video.ratings.each do |rating| %>
+            <div class='rating <%= cycle('rating-odd', 'rating-even') %>'>
+              <label><%= rating[:title] %>:</label>
+              <% rating[:values].each_with_index do |value, index| %>
+                <label for='video_<%= video.id %>_rating_<%= index %>' class='radio'>
+                  <%= radio_button_tag "video[rating[#{rating[:name]}]]", index, false, :id => "video_#{video.id}_rating_#{index}" %>
+                  <%= value %>
+                </label>
+              <% end %>
+            </div>
+          <% end %>
+          <div class='form-group'>
+            <%= text_field_tag 'video[tags]', nil, :placeholder => 'Tags' %>
+          </div>
+          <div class='form-group'>
+            <button type='button' class='btn pull-left'>Approve</button>
+            <button type='button' class='btn pull-right'>Hold</button>
+          </div>
+          <div class='clearfix'></div>
+          <div class='reject-reasons'>
+            <h3>Reject</h3>
+            <div>
+              <%= text_area_tag 'video[message_to_user]', nil, :placeholder => 'Custom Message To User' %>
+            </div>
+            <% video.reject_reasons.each do |reject_reason| %>
+              <div class='reject-button'>
+                <%= button_tag reject_reason[:title], :class => 'btn' %>
+              </div>
+            <% end %>
+            <div class='reject-button'>
+              <button type='button' class='btn'>Censor</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p>No videos to approve.</p>
+  <p><%= link_to 'Look Again', nil %></p>
+<% end %>
