@@ -97,7 +97,6 @@ class Video < Peanut::RedisOnly
       attrs_to_write[name] = val.to_json if ! val.nil?
     end
 
-    require 'pp'; pp attrs_to_write
     self.attrs.bulk_set(attrs_to_write)
   end
 

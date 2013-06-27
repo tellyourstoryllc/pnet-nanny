@@ -7,8 +7,6 @@ class VideoApiController < ApiController
       render :json => { :error => "invalid url" }, :status => 400
       return
     end
-    puts "********************"
-    require 'pp'; pp params
 
     v = Video.new(params[:video])
     v.passthru = params[:video][:passthru] || params[:video][:passthrough]
