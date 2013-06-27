@@ -10,6 +10,9 @@ class VideosController < ApplicationController
     per_page = (params[:pp] || 25).to_i
 
     @videos = Video.fetch_pending(min_id, per_page)
+
+    # Process from the queue if we have no videos.
+    Video.process_notification_queue if @videos.blank?
   end
 
   def held
