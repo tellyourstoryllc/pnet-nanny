@@ -65,24 +65,6 @@
 <%
 @content_for_jquery = <<-JS
   "use strict";
-  var VideoApp = window.VideoApp = {};
-  // String video IDs.
-  VideoApp.videoIds = #{ @videos.map {|v| v.id.to_s }.to_json.html_safe };
-
-  var removeVideoId = function(id) {
-    // Convert id to string.
-    var index = VideoApp.videoIds.indexOf('' + id);
-    if (index >= 0) {
-      VideoApp.videoIds.splice(index, 1);
-    }
-  };
-
-  var checkForMoreVideos = function() {
-    // If we've run out, refresh the page.
-    if (VideoApp.videoIds.length == 0) {
-      window.location.reload(true);
-    }
-  };
 
   $('.videos').masonry({
     columnWidth: 390,
@@ -90,7 +72,28 @@
     itemSelector: '.video'
   });
 
-  var isValidForApprove = function(form) {
+  // Namespace.
+  var VideoApp = window.VideoApp = {};
+
+  // String video IDs.
+  VideoApp.videoIds = #{ @videos.map {|v| v.id.to_s }.to_json.html_safe };
+
+  VideoApp.removeVideoId = function(id) {
+    // Convert id to string.
+    var index = VideoApp.videoIds.indexOf('' + id);
+    if (index >= 0) {
+      VideoApp.videoIds.splice(index, 1);
+    }
+  };
+
+  VideoApp.checkForMoreVideos = function() {
+    // If we've run out, refresh the page.
+    if (VideoApp.videoIds.length == 0) {
+      window.location.reload(true);
+    }
+  };
+
+  VideoApp.isValidForApprove = function(form) {
     var valid = true;
     $('.radio-rating', form).each(function() {
       if ($('input:checked', this).val() == null) {
@@ -105,10 +108,10 @@
 
   // form is the form with data DOM element
   // action can be one of: "pass", "fail", "hold"
-  var updateVideo = function(form, action) {
+  VideoApp.updateVideo = function(form, action) {
     var $form = $(form);
 
-    if (action === 'pass' && ! isValidForApprove(form)) {
+    if (action === 'pass' && ! VideoApp.isValidForApprove(form)) {
       return;
     }
 
@@ -139,32 +142,32 @@
     $('.videos').masonry('remove', $video).masonry('reload');
 
     // Track the videos we have on the page.
-    removeVideoId(videoId);
+    VideoApp.removeVideoId(videoId);
 
-    checkForMoreVideos();
+    VideoApp.checkForMoreVideos();
   };
 
-  var rejectVideo = function(form, rejectReasonId) {
+  VideoApp.rejectVideo = function(form, rejectReasonId) {
     var $form = $(form);
     // For censor, rejectReasonId will be null/undefined.
     $form.find("input[name='video[reject_reason_id]']").val(rejectReasonId);
-    updateVideo(form, 'fail');
+    VideoApp.updateVideo(form, 'fail');
   };
 
   $(document).on('submit', '.video-approval-form', function(event) {
     event.preventDefault();
-    updateVideo(this, 'pass');
+    VideoApp.updateVideo(this, 'pass');
   });
 
   $(document).on('click', '.hold-button', function(event) {
     event.preventDefault();
-    updateVideo($(this).closest('.video-approval-form'), 'hold');
+    VideoApp.updateVideo($(this).closest('.video-approval-form'), 'hold');
   });
 
   $(document).on('click', '.reject-button', function(event) {
     event.preventDefault();
     var rejectReasonId = $(this).attr('data-reject-reason-id');
-    rejectVideo($(this).closest('.video-approval-form'), rejectReasonId);
+    VideoApp.rejectVideo($(this).closest('.video-approval-form'), rejectReasonId);
   });
 JS
 
