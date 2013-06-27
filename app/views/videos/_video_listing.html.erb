@@ -21,8 +21,8 @@
               <div class='rating radio-rating <%= cycle('rating-odd', 'rating-even') %>'>
                 <label><%= rating[:title] %>:</label>
                 <% rating[:values].each_with_index do |value, index| %>
-                  <label for='video_<%= video.id %>_ratings_<%= rating[:name] %>_<%= index %>' class='radio'>
-                    <%= radio_button_tag "video[ratings[#{rating[:name]}]]", index, false, :id => "video_#{video.id}_ratings_#{rating[:name]}_#{index}" %>
+                  <label for='video_<%= video.id %>_ratings_<%= rating[:id] %>_<%= index %>' class='radio'>
+                    <%= radio_button_tag "video[ratings[#{rating[:id]}]]", index, false, :id => "video_#{video.id}_ratings_#{rating[:id]}_#{index}" %>
                     <%= value %>
                   </label>
                 <% end %>
