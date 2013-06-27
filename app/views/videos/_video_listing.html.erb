@@ -18,7 +18,7 @@
           <%= hidden_field_tag 'video[reject_reason_id]', nil %>
           <% video.ratings.each do |rating| %>
             <% if rating[:type] == 'radio' %>
-              <div class='rating <%= cycle('rating-odd', 'rating-even') %>'>
+              <div class='rating radio-rating <%= cycle('rating-odd', 'rating-even') %>'>
                 <label><%= rating[:title] %>:</label>
                 <% rating[:values].each_with_index do |value, index| %>
                   <label for='video_<%= video.id %>_ratings_<%= rating[:name] %>_<%= index %>' class='radio'>
@@ -70,15 +70,34 @@
     itemSelector: '.video'
   });
 
+  var isValidForApprove = function(form) {
+    valid = true;
+    $('.radio-rating', form).each(function() {
+      if ($('input:checked', this).val() == null) {
+        // User didn't select a rating.
+        alert("Please rate before approving.");
+        valid = false;
+        return false; // break.
+      }
+    });
+    return valid;
+  };
+
   // form is the form with data DOM element
   // action can be one of: "pass", "fail", "hold"
   var updateVideo = function(form, action) {
     var $form = $(form);
+
+    if (action === 'pass' && ! isValidForApprove(form)) {
+      return;
+    }
+
     $form.find("input[name='video[action]']").val(action);
     videoId = $form.attr('data-video-id');
     if (! videoId) {
       throw new Error("I was trying to update a video, but I couldn't find its id");
     }
+
     $.ajax({
       type: 'POST',
       url: "/videos/update/" + videoId,
