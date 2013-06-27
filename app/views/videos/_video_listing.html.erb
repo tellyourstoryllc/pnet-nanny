@@ -91,7 +91,7 @@
   });
 
   var isValidForApprove = function(form) {
-    valid = true;
+    var valid = true;
     $('.radio-rating', form).each(function() {
       if ($('input:checked', this).val() == null) {
         // User didn't select a rating.
@@ -113,7 +113,7 @@
     }
 
     $form.find("input[name='video[action]']").val(action);
-    videoId = $form.attr('data-video-id');
+    var videoId = $form.attr('data-video-id');
     if (! videoId) {
       throw new Error("I was trying to update a video, but I couldn't find its id");
     }

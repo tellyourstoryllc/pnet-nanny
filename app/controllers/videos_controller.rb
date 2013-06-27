@@ -27,18 +27,18 @@ class VideosController < ApplicationController
   def update
     video = Video.find(params[:id])
     if ! video
-      render :text => "video not found"
+      render :json => { :message => "video not found" }
       return
     end
 
     action = params[:video][:action]
     if ! %w[pass fail hold].include?(action)
-      render :text => "unknown action"
+      render :json => { :message => "unknown action" }
       return
     end
 
     if ! request.post?
-      render :text => "you must POST to perform this action"
+      render :json => { :message => "you must POST to perform this action" }
       return
     end
 
@@ -53,7 +53,7 @@ class VideosController < ApplicationController
       video.create_vote(action, video_params, @current_worker)
     end
 
-    render :text=>''
+    render :json => { :message => 'success' }
   end
 
   # Trigger delivery of callbacks in the queue.
