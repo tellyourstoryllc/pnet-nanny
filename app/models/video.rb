@@ -6,6 +6,7 @@ class Video < Peanut::RedisOnly
 
   attr_accessor :id, :temp_attrs
   hash_key :attrs
+  # Sets of task names.
   set :tasks_passed
   set :tasks_failed
   set :tasks_undecided
@@ -30,6 +31,7 @@ class Video < Peanut::RedisOnly
   # SortedSet of held videos.
   sorted_set :held_video_ids, :global => true
 
+  # List of Vote ids that reference videos that need their callbacks fired.
   list :notification_queue, :global => true
 
   class << self
@@ -65,8 +67,16 @@ class Video < Peanut::RedisOnly
         vote = Vote.find(vote_id)
         video = vote.try(:video)
         next unless video
+
+        # Attempt to deliver the callback to the client application.
         if video.deliver_callback(vote)
+          # Callback was successful.  Remove it.
           self.notification_queue.delete(vote_id)
+          # Remove references to the video and delete it.
+          vote.video_id = nil
+          vote.save
+          video.destroy
+
           succeeded += 1
         end
       end
@@ -136,6 +146,9 @@ class Video < Peanut::RedisOnly
     end
     true
   end
+
+  # Currently, there's nothing extra to do besides what's done in #delete.
+  alias_method :destroy, :delete
 
   def write_attrs
     self.id ||= generate_id
