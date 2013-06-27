@@ -126,16 +126,19 @@
       url: "/videos/update/" + videoId,
       dataType: 'json',
       data: $form.serialize()
-    }).done(function() {
+    }).then(function(data) {
       // When the update succeeds, if we accepted or rejected, then deliver
       // video callbacks to the client application.
       if (action === 'pass' || action === 'fail') {
-        $.ajax({
+        return $.ajax({
           type: 'POST',
           url: "/videos/deliver_callbacks",
           dataType: 'json'
         });
       }
+      return data;
+    }).always(function() {
+      VideoApp.checkForMoreVideos();
     });
     var $video = $form.closest('.video');
     // TODO: Upgrade masonry and change reload to layout.
@@ -143,8 +146,6 @@
 
     // Track the videos we have on the page.
     VideoApp.removeVideoId(videoId);
-
-    VideoApp.checkForMoreVideos();
   };
 
   VideoApp.rejectVideo = function(form, rejectReasonId) {
