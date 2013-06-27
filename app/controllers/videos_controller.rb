@@ -7,7 +7,7 @@ class VideosController < ApplicationController
   def index
 
     min_id = params[:min_id]
-    per_page = (params[:pp] || 25).to_i
+    per_page = (params[:pp] || 30).to_i
 
     @videos = Video.fetch_pending(min_id, per_page)
 
