@@ -39,9 +39,6 @@ class VideosController < ApplicationController
       return
     end
 
-    puts "*********************"
-    require 'pp'; pp params
-
     if action == 'hold'
       video.status = 'held'
       video.save
