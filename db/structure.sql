@@ -65,11 +65,12 @@ CREATE TABLE `votes` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `created_at` datetime NOT NULL,
   `worker_id` int(10) unsigned NOT NULL,
-  `photo_id` bigint(20) unsigned NOT NULL,
-  `taskname` enum('nudity') DEFAULT NULL,
+  `photo_id` bigint(20) unsigned DEFAULT NULL,
+  `taskname` enum('nudity','video_approval') DEFAULT NULL,
   `decision` enum('pass','fail') NOT NULL,
   `weight` tinyint(3) unsigned NOT NULL DEFAULT '1',
   `correct` enum('pending','yes','no','unknown') NOT NULL DEFAULT 'pending',
+  `video_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -91,3 +92,9 @@ CREATE TABLE `workers` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO schema_migrations (version) VALUES ('20130111210021');
+
+INSERT INTO schema_migrations (version) VALUES ('20130627004528');
+
+INSERT INTO schema_migrations (version) VALUES ('20130627154717');
+
+INSERT INTO schema_migrations (version) VALUES ('20130627155450');
