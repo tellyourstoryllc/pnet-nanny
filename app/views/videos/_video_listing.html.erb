@@ -1,3 +1,4 @@
+<% hold_queue ||= false %>
 <% if @videos.present? %>
   <div class='videos masonry'>
     <% @videos.each do |video| %>
@@ -33,7 +34,9 @@
           </div>
           <div class='form-group'>
             <button type='submit' class='btn pull-left'>Approve</button>
-            <button type='button' class='btn pull-right hold-button'>Hold</button>
+            <% if ! hold_queue %>
+              <button type='button' class='btn pull-right hold-button'>Hold</button>
+            <% end %>
           </div>
           <div class='clearfix'></div>
           <div class='reject-reasons'>

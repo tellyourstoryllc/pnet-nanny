@@ -1,4 +1,4 @@
 <h1>Approve Held Videos</h1>
 <p><%= pluralize(Video.held_video_ids.size, 'video') %> in held queue.</p>
 
-<%= render 'video_listing' %>
+<%= render :partial => 'video_listing', :locals => { :hold_queue => true } %>
