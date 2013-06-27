@@ -64,6 +64,26 @@
 
 <%
 @content_for_jquery = <<-JS
+  "use strict";
+  var VideoApp = window.VideoApp = {};
+  // String video IDs.
+  VideoApp.videoIds = #{ @videos.map {|v| v.id.to_s }.to_json.html_safe };
+
+  var removeVideoId = function(id) {
+    // Convert id to string.
+    var index = VideoApp.videoIds.indexOf('' + id);
+    if (index >= 0) {
+      VideoApp.videoIds.splice(index, 1);
+    }
+  };
+
+  var checkForMoreVideos = function() {
+    // If we've run out, refresh the page.
+    if (VideoApp.videoIds.length == 0) {
+      window.location.reload(true);
+    }
+  };
+
   $('.videos').masonry({
     columnWidth: 390,
     gutter: 10,
@@ -111,15 +131,17 @@
           type: 'POST',
           url: "/videos/deliver_callbacks",
           dataType: 'json'
-        }).done(function() {
-          // If we've run out, refresh the page.
-          if ($('.video').size() == 0) {
-            window.location.reload(true);
-          }
         });
       }
     });
-    $('.videos').masonry('remove', $form.closest('.video'));
+    var $video = $form.closest('.video');
+    // TODO: Upgrade masonry and change reload to layout.
+    $('.videos').masonry('remove', $video).masonry('reload');
+
+    // Track the videos we have on the page.
+    removeVideoId(videoId);
+
+    checkForMoreVideos();
   };
 
   var rejectVideo = function(form, rejectReasonId) {
