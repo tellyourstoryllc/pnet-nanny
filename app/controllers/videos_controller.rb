@@ -56,10 +56,14 @@ class VideosController < ApplicationController
     render :text=>''
   end
 
-  # Manually trigger delivery of callbacks in the queue.
+  # Trigger delivery of callbacks in the queue.
   def deliver_callbacks
+    if ! request.post?
+      render :json => { :message => "You must POST to do this" }, :status => 400
+      return
+    end
     Video.process_notification_queue
-    render :text=>''
+    render :json => { :message => 'success' }
   end
 
 end

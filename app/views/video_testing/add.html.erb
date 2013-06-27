@@ -10,6 +10,8 @@
   </div>
 <% end %>
 
+<%= button_to 'Deliver Video Callbacks', url_for(:action => 'deliver_callbacks'), :class => 'btn', :remote => true %>
+
 <% if @result %>
   <h3>Result</h3>
   <pre><code><%= @response.code %>

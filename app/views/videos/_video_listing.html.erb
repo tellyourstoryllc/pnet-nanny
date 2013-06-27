@@ -67,6 +67,8 @@
     itemSelector: '.video'
   });
 
+  // form is the form with data DOM element
+  // action can be one of: "pass", "fail", "hold"
   var updateVideo = function(form, action) {
     var $form = $(form);
     $form.find("input[name='video[action]']").val(action);
@@ -74,12 +76,26 @@
     if (! videoId) {
       throw new Error("I was trying to update a video, but I couldn't find its id");
     }
-    console.log($(form).serialize(), action);
     $.ajax({
       type: 'POST',
       url: "/videos/update/" + videoId,
       dataType: 'json',
       data: $form.serialize()
+    }).done(function() {
+      // When the update succeeds, if we accepted or rejected, then deliver
+      // video callbacks to the client application.
+      if (action === 'pass' || action === 'fail') {
+        $.ajax({
+          type: 'POST',
+          url: "/videos/deliver_callbacks",
+          dataType: 'json'
+        }).done(function() {
+          // If we've run out, refresh the page.
+          if ($('.video').size() == 0) {
+            window.location.reload(true);
+          }
+        });
+      }
     });
     $('.videos').masonry('remove', $form.closest('.video'));
   };
@@ -88,7 +104,6 @@
     var $form = $(form);
     // For censor, rejectReasonId will be null/undefined.
     $form.find("input[name='video[reject_reason_id]']").val(rejectReasonId);
-    console.log('TODO', $(form).serialize(), 'reject', rejectReasonId);
     updateVideo(form, 'fail');
   };
 

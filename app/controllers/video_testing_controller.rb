@@ -46,4 +46,12 @@ class VideoTestingController < ApplicationController
     render :json=>{:success=>true}
   end
 
+  # Manually trigger delivery of callbacks in the queue.
+  def deliver_callbacks
+    if request.post?
+      Video.process_notification_queue
+    end
+    render :nothing => true
+  end
+
 end
