@@ -1,8 +1,14 @@
 class Video < Peanut::RedisOnly
+  extend ActiveModel::Naming
   include ::Redis::Objects
+
+  TASK_NAME = 'video_approval'
 
   attr_accessor :id, :temp_attrs
   hash_key :attrs
+  set :tasks_passed
+  set :tasks_failed
+  set :tasks_undecided
 
   class_attribute :attribute_names
   self.attribute_names = %w[
@@ -24,10 +30,18 @@ class Video < Peanut::RedisOnly
   # SortedSet of held videos.
   sorted_set :held_video_ids, :global => true
 
+  list :notification_queue, :global => true
+
   class << self
 
+    alias_method :find, :find_by_id
+
+    def primary_key
+      'id'
+    end
+
     # Pick some videos for worker to review. Returns an array of Videos.
-    def fetch_assignments(worker, min_id, per_page, options = {})
+    def fetch_pending(min_id, per_page, options = {})
       options = {
         :limit => per_page,
       }.merge(options)
@@ -35,7 +49,30 @@ class Video < Peanut::RedisOnly
       video_ids.map {|id| Video.find_by_id(id) }
     end
 
-    alias_method :find, :find_by_id
+    # Pick some videos for worker to review. Returns an array of Videos.
+    def fetch_held(min_id, per_page, options = {})
+      options = {
+        :limit => per_page,
+      }.merge(options)
+      video_ids = self.held_video_ids.rangebyscore(min_id || "-INF", "INF", options)
+      video_ids.map {|id| Video.find_by_id(id) }
+    end
+
+    # Deliver pending callbacks to the clients.
+    def process_notification_queue
+      succeeded = 0
+      self.notification_queue.each do |vote_id|
+        vote = Vote.find(vote_id)
+        video = vote.try(:video)
+        next unless video
+        if video.deliver_callback(vote)
+          self.notification_queue.delete(vote_id)
+          succeeded += 1
+        end
+      end
+
+      succeeded
+    end
 
   end
 
@@ -63,6 +100,21 @@ class Video < Peanut::RedisOnly
     define_method "#{name}=" do |value|
       self.temp_attrs[name] = value
     end
+  end
+
+  # Bracket indexing is used by ActiveRecord.
+  def [](name)
+    self.temp_attrs[name]
+  end
+
+  # Used by ActiveRecord.
+  def destroyed?
+    false  # TODO: Not currently tracking when we delete an object.
+  end
+
+  # Used by ActiveRecord.
+  def new_record?
+    self.id.nil?
   end
 
   def save
@@ -126,8 +178,135 @@ class Video < Peanut::RedisOnly
     redis.zrem(self.class.held_video_ids.key, self.id)
   end
 
+  def dequeue
+    redis.pipelined do
+      dequeue_non_atomically
+    end
+  end
+
   def attribute_names
     self.class.attribute_names
+  end
+
+  #############################################################################
+  # Votes
+
+  def create_vote(decision, params, worker)
+    vote = Vote.find_by_worker_id_and_video_id(worker.id, self.id)
+    if ! vote
+      vote = Vote.new
+      vote.worker = worker
+      vote.video = self
+      vote.taskname = TASK_NAME
+      vote.weight = 1 + 4 * worker.clearance.to_i
+    end
+
+    vote.decision = case decision.to_s
+    when 'pass', 'true', 'yes'
+      'pass'
+    when 'fail', 'false', 'no'
+      'fail'
+    end
+
+    vote.video_approval_params = params
+    vote.save
+    self.tally_votes(vote)
+  end
+
+  def tally_votes(vote)
+    minimum_votes = Settings.get('min_votes') || 5   # min number needed to approve
+    maximum_votes = Settings.get('max_votes') || 10  # auto-rejection if consensus hasn't been reached by this many votes
+    approval_ratio = Settings.get('approval_percentage') || 80
+    rejection_ratio = Settings.get('reject_percentage') || 60
+
+    all = task_votes.map { |v| v.weight.to_i }.reduce(:+)
+    pass = pass_votes.map { |v| v.weight.to_i }.reduce(:+)
+    fail = fail_votes.map { |v| v.weight.to_i }.reduce(:+)
+
+    if all >= minimum_votes.to_i
+      if (pass.to_f / all.to_f) * 100 >= approval_ratio.to_i
+        mark_passed(vote)
+      elsif ((fail.to_f / all.to_f) * 100 >= rejection_ratio.to_i)
+        mark_failed(vote)
+      elsif all >= maximum_votes.to_i
+        mark_unclear(vote)
+      else
+        # No decision yet. Wait for more votes...
+      end
+    end
+  end
+
+  def task_votes
+    Vote.where(:video_id => self.id, :taskname => TASK_NAME)
+  end
+
+  def pass_votes
+    task_votes.where(:decision => 'pass')
+  end
+
+  def fail_votes
+    task_votes.where(:decision => 'fail')
+  end
+
+  def mark_passed(vote)
+    self.tasks_passed << TASK_NAME
+    self.pass_votes.update_all(:correct => :yes)
+    self.fail_votes.update_all(:correct => :no)
+    self.after_task_completion(vote)
+  end
+
+  def mark_failed(vote)
+    self.tasks_failed << TASK_NAME
+    self.pass_votes.update_all(:correct => :no)
+    self.fail_votes.update_all(:correct => :yes)
+    self.after_task_completion(vote)
+  end
+
+  def mark_unclear(vote)
+    self.tasks_undecided << TASK_NAME
+    self.task_votes.update_all(:correct => :unknown)
+    self.after_task_completion(vote)
+  end
+
+  def after_task_completion(vote)
+    # There is currently only 1 video task, so if we're here, we've completed
+    # all tasks.
+    self.notification_queue << vote.id
+    self.status = 'delivering'
+    self.save
+  end
+
+  def deliver_callback(vote)
+    passed = self.tasks_passed.members
+    failed = self.tasks_failed.members
+    undecided = self.tasks_undecided.members
+    begin
+      body = self.passthru || {}
+      body.merge!({
+        :url => self.url,
+        :passed => passed,
+        :failed => failed,
+        :undecided => undecided,
+      })
+      %w[ratings message_to_user tags].each do |name|
+        if vote.video_approval_params[name]
+          body[name] = vote.video_approval_params[name]
+        end
+      end
+      response = HTTParty.post(self.callback_url, :body => body)
+      if (200..299).include?(response.code)
+        self.status = 'completed'
+        self.save
+        Peanut::GeneralLog.log_event "Callback succeeded: #{self.callback_url} #{body}", :callback
+        true
+      else
+        Peanut::GeneralLog.log_error "Callback failed with HTTP code #{response.code}: #{self.callback_url}", :callback
+        false
+      end
+    rescue Exception => e
+      Peanut::GeneralLog.log_error "Callback failed: #{self.callback_url}: #{e.class}: #{e.message}", :callback
+      false
+    end
   end
 
 
