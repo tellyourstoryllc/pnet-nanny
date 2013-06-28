@@ -15,7 +15,7 @@
             <div class='info'><%= link_to 'Info', video.info_url %></div>
           <% end %>
         </div>
-        <form class='video-approval-form form form-inline' data-video-id='<%= video.id %>'>
+        <form class='video-approval-form approve-video-approval-form form form-inline' data-video-id='<%= video.id %>'>
           <%= hidden_field_tag 'video[action]', nil %>
           <div class='form-group-title'>Approve</div>
           <% video.ratings.each do |rating| %>
@@ -38,29 +38,41 @@
             <button type='submit' class='btn'>Approve</button>
           </div>
         </form>
-        <form class='video-approval-form form form-inline' data-video-id='<%= video.id %>'>
+        <form class='video-approval-form reject-video-approval-form form form-inline' data-video-id='<%= video.id %>'>
           <%= hidden_field_tag 'video[action]', nil %>
-          <%= hidden_field_tag 'video[reject_reason_id]', nil %>
           <div class='form-group-title'>Reject</div>
           <div class='reject-reasons'>
-            <div>
-              <%= text_area_tag 'video[message_to_user]', nil, :placeholder => 'Custom Message To User' %>
-            </div>
             <% video.reject_reasons.each do |reject_reason| %>
               <div class='reject-button-container'>
-                <%= button_tag reject_reason[:title], :class => 'btn reject-button', 'data-reject-reason-id' => reject_reason[:id] %>
+                <label for='video_<%= video.id %>_reject_reason_id_<%= reject_reason[:id] %>' class='radio'>
+                  <%= radio_button_tag "video[reject_reason_id]", reject_reason[:id], false, :class => 'btn reject-button', :id => "video_#{video.id}_reject_reason_id_#{reject_reason[:id]}", 'data-reject-reason-id' => reject_reason[:id] %>
+                  <%= reject_reason[:title] %>
+                </label>
               </div>
             <% end %>
             <div class='reject-button-container'>
-              <button type='button' class='btn reject-button'>Censor</button>
+              <label for='video_<%= video.id %>_reject_reason_id' class='radio'>
+                <%= radio_button_tag "video[reject_reason_id]", '__censor__', false, :class => 'btn reject-button censor-reject-radio', :id => "video_#{video.id}_reject_reason_id" %>
+                Censor
+              </label>
+            </div>
+            <div>
+              <label for='video_<%= video.id %>_reject_reason_id__custom__' class='radio'>
+                <%= radio_button_tag "video[reject_reason_id]", '__custom__', false, :class => 'btn reject-button custom-reject-radio', :id => "video_#{video.id}_reject_reason_id__custom__" %>
+                Custom
+              </label>
+              <%= text_area_tag 'video[message_to_user]', nil, :placeholder => 'Message To User' %>
+            </div>
+            <div class='reject-button-container'>
+              <button type='submit' class='btn reject-button'>Reject</button>
             </div>
           </div>
         </form>
         <% if ! hold_queue %>
-          <form class='video-approval-form form form-inline' data-video-id='<%= video.id %>'>
+          <form class='video-approval-form hold-video-approval-form form form-inline' data-video-id='<%= video.id %>'>
             <div class='form-group-title'>Hold</div>
             <%= hidden_field_tag 'video[action]', nil %>
-            <button type='button' class='btn hold-button'>Hold</button>
+            <button type='submit' class='btn hold-button'>Hold</button>
           </form>
         <% end %>
         <div class='clearfix'></div>
@@ -110,12 +122,29 @@
     return valid;
   };
 
+  VideoApp.isValidForReject = function(form) {
+    var valid = true;
+    if ($('input:checked', form).val() == null) {
+      // User didn't select a rating.
+      alert("Please select reason before rejecting.");
+      valid = false;
+      return false; // break.
+    }
+    return valid;
+  };
+
   // form is the form with data DOM element
   // action can be one of: "pass", "fail", "hold"
   VideoApp.updateVideo = function(form, action) {
     var $form = $(form);
 
     if (action === 'pass' && ! VideoApp.isValidForApprove(form)) {
+      return;
+    }
+
+    if (action === 'fail' && ! VideoApp.isValidForReject(form)) {
+      // Re-enable any form elements that were disbaled.
+      $('input, textarea', form).attr('disabled', null);
       return;
     }
 
@@ -155,25 +184,33 @@
 
   VideoApp.rejectVideo = function(form, rejectReasonId) {
     var $form = $(form);
-    // For censor, rejectReasonId will be null/undefined.
-    $form.find("input[name='video[reject_reason_id]']").val(rejectReasonId);
+    if (rejectReasonId === '__custom__') {
+      // Disable the custom radio to prevent it from being sent.
+      $('.custom-reject-radio', form).attr('disabled', 'disabled');
+    }
+    else {
+      // Disable the textrea to prevent it from being sent.
+      $("[name='video[message_to_user]']", form).attr('disabled', 'disabled');
+      // Disable the censor radio to prevent it from being sent.
+      $('.censor-reject-radio', form).attr('disabled', 'disabled');
+    }
     VideoApp.updateVideo(form, 'fail');
   };
 
-  $(document).on('submit', '.video-approval-form', function(event) {
+  $(document).on('submit', '.approve-video-approval-form', function(event) {
     event.preventDefault();
     VideoApp.updateVideo(this, 'pass');
   });
 
-  $(document).on('click', '.hold-button', function(event) {
+  $(document).on('submit', '.hold-video-approval-form', function(event) {
     event.preventDefault();
-    VideoApp.updateVideo($(this).closest('.video-approval-form'), 'hold');
+    VideoApp.updateVideo(this, 'hold');
   });
 
-  $(document).on('click', '.reject-button', function(event) {
+  $(document).on('submit', '.reject-video-approval-form', function(event) {
     event.preventDefault();
-    var rejectReasonId = $(this).attr('data-reject-reason-id');
-    VideoApp.rejectVideo($(this).closest('.video-approval-form'), rejectReasonId);
+    var rejectReasonId = $("[name='video[reject_reason_id]']:checked", this).val();
+    VideoApp.rejectVideo(this, rejectReasonId);
   });
 JS
 
