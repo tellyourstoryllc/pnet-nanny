@@ -1,6 +1,6 @@
 class Video < Peanut::RedisOnly
   extend ActiveModel::Naming
-  include ::Redis::Objects
+  include Peanut::Redis::Objects
 
   TASK_NAME = 'video_approval'
 
@@ -31,9 +31,6 @@ class Video < Peanut::RedisOnly
   # SortedSet of held videos.
   sorted_set :held_video_ids, :global => true
 
-  # List of Vote ids that reference videos that need their callbacks fired.
-  list :notification_queue, :global => true
-
   class << self
 
     alias_method :find, :find_by_id
@@ -61,28 +58,10 @@ class Video < Peanut::RedisOnly
     end
 
     # Deliver pending callbacks to the clients.
-    def process_notification_queue
-      succeeded = 0
-      self.notification_queue.each do |vote_id|
-        vote = Vote.find(vote_id)
-        video = vote.try(:video)
-        next unless video
-
-        # Attempt to deliver the callback to the client application.
-        if video.deliver_callback(vote)
-          # Callback was successful.  Remove it.
-          self.notification_queue.delete(vote_id)
-          # Remove references to the video and delete it.
-          vote.video_id = nil
-          vote.save
-          video.destroy
-
-          succeeded += 1
-        end
-      end
-
-      succeeded
+    def process_callback_queue
+      QueueProcessor.work_off_queue
     end
+    alias_method :process_notification_queue, :process_callback_queue
 
   end
 
@@ -284,11 +263,12 @@ class Video < Peanut::RedisOnly
   def after_task_completion(vote)
     # There is currently only 1 video task, so if we're here, we've completed
     # all tasks.
-    self.notification_queue << vote.id
     self.status = 'delivering'
     self.save
+    VideoCallbackWorker.perform_async(vote.id)
   end
 
+  # POST callback.  On failure, raises.
   def deliver_callback(vote)
     passed = self.tasks_passed.members
     failed = self.tasks_failed.members
@@ -314,11 +294,11 @@ class Video < Peanut::RedisOnly
         true
       else
         Peanut::GeneralLog.log_error "Callback failed with HTTP code #{response.code}: #{self.callback_url}", :callback
-        false
+        raise "Non-success status code returned: #{response.code}"
       end
     rescue Exception => e
       Peanut::GeneralLog.log_error "Callback failed: #{self.callback_url}: #{e.class}: #{e.message}", :callback
-      false
+      raise e
     end
   end
 
