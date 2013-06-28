@@ -1,8 +1,8 @@
 <% hold_queue ||= false %>
 <% if @videos.present? %>
-  <div class='videos masonry'>
+  <div class='videos'>
     <% @videos.each do |video| %>
-      <div class='masonry-brick video'>
+      <div class='video'>
         <video poster='<%= video.thumbnail_url %>' preload='none' controls>
           <source src='<%= video.url %>'>
         </video>
@@ -65,12 +65,6 @@
 <%
 @content_for_jquery = <<-JS
   "use strict";
-
-  $('.videos').masonry({
-    columnWidth: 390,
-    gutter: 10,
-    itemSelector: '.video'
-  });
 
   // Namespace.
   var VideoApp = window.VideoApp = {};
@@ -141,8 +135,7 @@
       VideoApp.checkForMoreVideos();
     });
     var $video = $form.closest('.video');
-    // TODO: Upgrade masonry and change reload to layout.
-    $('.videos').masonry('remove', $video).masonry('reload');
+    $video.remove();
 
     // Track the videos we have on the page.
     VideoApp.removeVideoId(videoId);
