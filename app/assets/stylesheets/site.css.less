@@ -213,9 +213,20 @@ div.review_controller {
 
 .video {
   box-sizing: border-box;
-  max-width: 370px;
-  // float: left;
   margin: 20px 10px;
+}
+
+.video-display, .video-approval-form {
+  float: left;
+}
+
+.video-approval-form {
+  margin: 0 10px 10px;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+  border: 1px solid #c8c8cf;
+  border-radius: 4px;
+  background-color: #fafafa;
+  padding: 5px;
 }
 
 .form-group {
@@ -223,7 +234,6 @@ div.review_controller {
 }
 
 .form-group-title {
-  margin-top: 10px;
   margin-bottom: 5px;
   color: @blue;
   font-size: 18px;

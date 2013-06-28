@@ -3,19 +3,21 @@
   <div class='videos'>
     <% @videos.each do |video| %>
       <div class='video'>
-        <video poster='<%= video.thumbnail_url %>' preload='none' controls>
-          <source src='<%= video.url %>'>
-        </video>
-        <div class='description'><%= video.description %></div>
-        <% if video.creator_url %>
-          <div class='creator'><%= link_to 'Creator', video.creator_url %></div>
-        <% end %>
-        <% if video.info_url %>
-          <div class='info'><%= link_to 'Info', video.info_url %></div>
-        <% end %>
+        <div class='video-display'>
+          <video poster='<%= video.thumbnail_url %>' preload='none' controls>
+            <source src='<%= video.url %>'>
+          </video>
+          <div class='description'><%= video.description %></div>
+          <% if video.creator_url %>
+            <div class='creator'><%= link_to 'Creator', video.creator_url %></div>
+          <% end %>
+          <% if video.info_url %>
+            <div class='info'><%= link_to 'Info', video.info_url %></div>
+          <% end %>
+        </div>
         <form class='video-approval-form form form-inline' data-video-id='<%= video.id %>'>
           <%= hidden_field_tag 'video[action]', nil %>
-          <%= hidden_field_tag 'video[reject_reason_id]', nil %>
+          <div class='form-group-title'>Approve</div>
           <% video.ratings.each do |rating| %>
             <% if rating[:type] == 'radio' %>
               <div class='rating radio-rating <%= cycle('rating-odd', 'rating-even') %>'>
@@ -33,14 +35,14 @@
             <%= text_field_tag 'video[tags]', nil, :placeholder => 'Tags' %>
           </div>
           <div class='form-group'>
-            <button type='submit' class='btn pull-left'>Approve</button>
-            <% if ! hold_queue %>
-              <button type='button' class='btn pull-right hold-button'>Hold</button>
-            <% end %>
+            <button type='submit' class='btn'>Approve</button>
           </div>
-          <div class='clearfix'></div>
+        </form>
+        <form class='video-approval-form form form-inline' data-video-id='<%= video.id %>'>
+          <%= hidden_field_tag 'video[action]', nil %>
+          <%= hidden_field_tag 'video[reject_reason_id]', nil %>
+          <div class='form-group-title'>Reject</div>
           <div class='reject-reasons'>
-            <div class='form-group-title'>Reject</div>
             <div>
               <%= text_area_tag 'video[message_to_user]', nil, :placeholder => 'Custom Message To User' %>
             </div>
@@ -54,6 +56,14 @@
             </div>
           </div>
         </form>
+        <% if ! hold_queue %>
+          <form class='video-approval-form form form-inline' data-video-id='<%= video.id %>'>
+            <div class='form-group-title'>Hold</div>
+            <%= hidden_field_tag 'video[action]', nil %>
+            <button type='button' class='btn hold-button'>Hold</button>
+          </form>
+        <% end %>
+        <div class='clearfix'></div>
       </div>
     <% end %>
   </div>
@@ -135,7 +145,9 @@
       VideoApp.checkForMoreVideos();
     });
     var $video = $form.closest('.video');
-    $video.remove();
+    $video.slideUp(function() {
+      $video.remove();
+    });
 
     // Track the videos we have on the page.
     VideoApp.removeVideoId(videoId);
