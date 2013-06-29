@@ -15,7 +15,7 @@ class Video < Peanut::RedisOnly
   self.attribute_names = %w[
     status client_id url passthru callback_url thumbnail_url
     description info_url creator_url ratings reject_reasons
-    message_to_user tags
+    message_to_user tags hold_comments
   ].map(&:to_sym)
 
   # These attributes are treated as nested Hashes and serialized to JSON and

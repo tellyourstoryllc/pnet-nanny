@@ -42,13 +42,14 @@ class VideosController < ApplicationController
       return
     end
 
+    video_params = params[:video].dup
     if action == 'hold'
       video.status = 'held'
+      video.hold_comments = video_params[:hold_comments]
       video.save
     else
       # Make sure params contains the Video id.  This eventually goes into the
       # Video.notification_queue.
-      video_params = params[:video].dup
       video_params[:id] = video.id
       video.create_vote(action, video_params, @current_worker)
     end

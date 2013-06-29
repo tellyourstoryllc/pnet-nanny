@@ -68,13 +68,19 @@
             </div>
           </div>
         </form>
-        <% if ! hold_queue %>
-          <form class='video-approval-form hold-video-approval-form form form-inline' data-video-id='<%= video.id %>'>
-            <div class='form-group-title'>Hold</div>
-            <%= hidden_field_tag 'video[action]', nil %>
-            <button type='submit' class='btn hold-button'>Hold</button>
-          </form>
-        <% end %>
+        <form class='video-approval-form hold-video-approval-form form form-inline' data-video-id='<%= video.id %>'>
+          <%= hidden_field_tag 'video[action]', nil %>
+          <div class='form-group-title'>Hold</div>
+          <div>
+            <%= text_area_tag "video[hold_comments]", video.hold_comments, :id => nil, :class => 'hold-comments-input' %>
+          </div>
+          <% if hold_queue %>
+            <span class='muted'>Already Held</span>
+          <% end %>
+          <div class='form-group'>
+            <button type='submit' class='btn hold-button'><%= hold_queue ? 'Save' : 'Hold' %></button>
+          </div>
+        </form>
         <div class='clearfix'></div>
       </div>
     <% end %>
