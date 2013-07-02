@@ -51,28 +51,6 @@ h1, h2, h3 {
   font-weight: normal;
 }
 
-#main {
-  width:1000px;
-  padding: 0;
-  background-color: transparent;
-  background-size: auto;
-  background-attachment: scroll;
-  background-origin: padding-box;
-  height: 100%;
-  min-height: 100%;
-}
-
-#main {
-  width:800px;
-  padding: 0;
-  background-color: transparent;
-  background-size: auto;
-  background-attachment: scroll;
-  background-origin: padding-box;
-  height: 100%;
-  min-height: 100%;
-}
-
 #footer {
   padding: 10px;
   color: @black;
@@ -226,4 +204,63 @@ div.review_controller {
   }
 }
 
+/////////////////////////////////////////////////////////////////////
+// Videos
 
+.videos {
+  position: relative;
+}
+
+.video {
+  box-sizing: border-box;
+  margin: 20px 10px;
+}
+
+.video-display, .video-approval-form {
+  float: left;
+}
+
+.video-approval-form {
+  margin: 0 10px 10px;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+  border: 1px solid #c8c8cf;
+  border-radius: 4px;
+  background-color: #fafafa;
+  padding: 5px;
+}
+
+.form-group {
+  margin-top: 10px
+}
+
+.form-group-title {
+  margin-bottom: 5px;
+  color: @blue;
+  font-size: 18px;
+}
+
+.rating {
+  padding: 2px;
+  label {
+    margin-bottom: 0;
+    margin-right: 10px;
+    vertical-align: middle;
+    font-size: 90%;
+  }
+}
+
+.rating-odd {
+  background-color: #f8f8ff;
+}
+
+.rating-even {
+  background-color: #e8e8ef;
+}
+
+.reject-button-container {
+  margin-top: 10px;
+}
+
+.hold-comments-input {
+  width: 150px;
+}

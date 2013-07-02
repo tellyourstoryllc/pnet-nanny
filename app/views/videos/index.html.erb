@@ -1,0 +1,4 @@
+<h1>Approve Videos</h1>
+<p><%= pluralize(Video.pending_video_ids.size, 'video') %> in queue.</p>
+
+<%= render 'video_listing' %>

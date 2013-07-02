@@ -6,10 +6,14 @@ PNet::Nanny::Application.routes.draw do
   match 'mturk/review' => 'mturk#review', :as => :turkey
   match 'mturk/vote' => 'mturk#vote', :as => :vote
 
+  match 'api/video/submit' => 'video_api#submit'
   match 'api/photo/submit' => 'photo_api#submit'
 
   match 'review/:action(/:id)' => 'review'
   match 'review' => 'review#index', :as => :review
+
+  match 'videos(/:action(/:id))' => 'videos'
+  match 'video_testing(/:action)' => 'video_testing'
 
   match 'eden/:action(/:id)' => 'admin'
   match 'eden' => 'admin#index'
