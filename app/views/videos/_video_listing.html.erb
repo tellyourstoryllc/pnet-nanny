@@ -55,7 +55,7 @@
                 <%= radio_button_tag "video[reject_reason_id]", '__custom__', false, :class => 'btn reject-button custom-reject-radio', :id => "video_#{video.id}_reject_reason_id__custom__" %>
                 Custom
               </label>
-              <%= text_area_tag 'video[message_to_user]', nil, :placeholder => 'Message To User' %>
+              <%= text_area_tag 'video[message_to_user]', nil, :placeholder => 'Message To User', :disabled => 'disabled' %>
             </div>
             <div class='reject-button-container'>
               <button type='submit' class='btn reject-button'>Reject</button>
@@ -198,12 +198,21 @@
       // Disable the custom radio to prevent it from being sent.
       $('.custom-reject-radio', form).attr('disabled', 'disabled');
     }
-    else {
-      // Disable the textrea to prevent it from being sent.
-      $("[name='video[message_to_user]']", form).attr('disabled', 'disabled');
-    }
     VideoApp.updateVideo(form, 'fail');
   };
+
+  $(document).on('click', "[name='video[reject_reason_id]']", function(event) {
+    // When you select the reject reason, enable or disable the custom message
+    // textarea accordingly so that it's not sent.
+    var $form = $(this).closest('form');
+    var $messageToUser = $("[name='video[message_to_user]']", $form);
+    if ($(this).val() === '__custom__') {
+      $messageToUser.attr('disabled', null);
+    }
+    else {
+      $messageToUser.attr('disabled', 'disabled');
+    }
+  });
 
   $(document).on('submit', '.approve-video-approval-form', function(event) {
     event.preventDefault();
