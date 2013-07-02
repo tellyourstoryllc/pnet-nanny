@@ -55,7 +55,7 @@
                 <%= radio_button_tag "video[reject_reason_id]", '__custom__', false, :class => 'btn reject-button custom-reject-radio', :id => "video_#{video.id}_reject_reason_id__custom__" %>
                 Custom
               </label>
-              <%= text_area_tag 'video[message_to_user]', nil, :placeholder => 'Message To User', :disabled => 'disabled' %>
+              <%= text_area_tag 'video[message_to_user]', nil, :placeholder => 'Message To User', :disabled => 'disabled', :maxlength => 160 %>
             </div>
             <div class='reject-button-container'>
               <button type='submit' class='btn reject-button'>Reject</button>
