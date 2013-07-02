@@ -20,6 +20,9 @@ class VideoTestingController < ApplicationController
             { :id => 3,
               :title => "No Sound or Bad Audio Quality",
             },
+            { :id => 4,
+              :title => "Inappropriate Content",
+            },
           ],
           :ratings => [
             { :type => 'radio',
