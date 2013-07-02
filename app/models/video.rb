@@ -281,7 +281,7 @@ class Video < Peanut::RedisOnly
         :failed => failed,
         :undecided => undecided,
       })
-      %w[ratings message_to_user tags].each do |name|
+      %w[ratings message_to_user tags reject_reason_id].each do |name|
         if vote.video_approval_params[name]
           body[name] = vote.video_approval_params[name]
         end
