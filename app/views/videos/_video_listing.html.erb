@@ -94,6 +94,8 @@
   // String video IDs.
   VideoApp.videoIds = #{ @videos.map {|v| v.id.to_s }.to_json.html_safe };
 
+  VideoApp.isHoldDisplay = #{ (!! hold_queue).to_json.html_safe };
+
   VideoApp.removeVideoId = function(id) {
     // Convert id to string.
     var index = VideoApp.videoIds.indexOf('' + id);
@@ -131,6 +133,17 @@
       return false; // break.
     }
     return valid;
+  };
+
+  VideoApp.removeVideoFromDisplay = function(form, videoId) {
+    var $form = $(form);
+    var $video = $form.closest('.video');
+    $video.slideUp(function() {
+      $video.remove();
+    });
+
+    // Track the videos we have on the page.
+    VideoApp.removeVideoId(videoId);
   };
 
   // form is the form with data DOM element
@@ -173,13 +186,10 @@
     }).always(function() {
       VideoApp.checkForMoreVideos();
     });
-    var $video = $form.closest('.video');
-    $video.slideUp(function() {
-      $video.remove();
-    });
 
-    // Track the videos we have on the page.
-    VideoApp.removeVideoId(videoId);
+    if (action !== 'hold' || ! VideoApp.isHoldDisplay) {
+      VideoApp.removeVideoFromDisplay(form, videoId);
+    }
   };
 
   VideoApp.rejectVideo = function(form, rejectReasonId) {
