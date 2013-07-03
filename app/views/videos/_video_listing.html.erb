@@ -43,19 +43,21 @@
           <div class='form-group-title'>Reject</div>
           <div class='reject-reasons'>
             <% video.reject_reasons.each do |reject_reason| %>
-              <div class='reject-button-container'>
+              <div class='reject-option-container'>
                 <label for='video_<%= video.id %>_reject_reason_id_<%= reject_reason[:id] %>' class='radio'>
-                  <%= radio_button_tag "video[reject_reason_id]", reject_reason[:id], false, :class => 'btn reject-button', :id => "video_#{video.id}_reject_reason_id_#{reject_reason[:id]}", 'data-reject-reason-id' => reject_reason[:id] %>
+                  <%= radio_button_tag "video[reject_reason_id]", reject_reason[:id], false, :id => "video_#{video.id}_reject_reason_id_#{reject_reason[:id]}", 'data-reject-reason-id' => reject_reason[:id] %>
                   <%= reject_reason[:title] %>
                 </label>
               </div>
             <% end %>
-            <div>
+            <div class='reject-option-container'>
               <label for='video_<%= video.id %>_reject_reason_id__custom__' class='radio'>
                 <%= radio_button_tag "video[reject_reason_id]", '__custom__', false, :class => 'btn reject-button custom-reject-radio', :id => "video_#{video.id}_reject_reason_id__custom__" %>
                 Custom
               </label>
-              <%= text_area_tag 'video[message_to_user]', nil, :placeholder => 'Message To User', :disabled => 'disabled', :maxlength => 160 %>
+              <div>
+                <%= text_area_tag 'video[message_to_user]', nil, :placeholder => 'Message To User', :disabled => 'disabled', :maxlength => 160 %>
+              </div>
             </div>
             <div class='reject-button-container'>
               <button type='submit' class='btn reject-button'>Reject</button>
