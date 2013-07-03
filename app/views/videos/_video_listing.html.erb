@@ -2,6 +2,7 @@
 <% if @videos.present? %>
   <div class='videos'>
     <% @videos.each do |video| %>
+      <% reset_cycle %>
       <div class='video'>
         <div class='video-display'>
           <video poster='<%= video.thumbnail_url %>' preload='none' controls>
