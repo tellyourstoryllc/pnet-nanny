@@ -12,10 +12,10 @@
           <% if video.created_at_time %>
             <div class='timestamp'><%= video.created_at_time.in_time_zone('Eastern Time (US & Canada)').strftime("%a %-m/%-d/%y %l:%M%P %Z") %></div>
           <% end %>
-          <% if video.creator_url %>
+          <% if video.creator_url.present? %>
             <div class='creator'><%= link_to 'Creator', video.creator_url %></div>
           <% end %>
-          <% if video.info_url %>
+          <% if video.info_url.present? %>
             <div class='info'><%= link_to 'Info', video.info_url %></div>
           <% end %>
         </div>
