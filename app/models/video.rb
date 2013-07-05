@@ -132,7 +132,7 @@ class Video < Peanut::RedisOnly
   def write_attrs
     self.id ||= generate_id
     self.temp_attrs[:id] = self.id
-    self.temp_attrs[:created_at] ||= Time.current.to_i
+    self.temp_attrs[:created_at] ||= Time.now.utc.to_i
 
     attrs_to_write = self.temp_attrs.dup
     # Serialize nested hashes.
