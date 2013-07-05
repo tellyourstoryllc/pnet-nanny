@@ -16,6 +16,7 @@ class Video < Peanut::RedisOnly
     status client_id url passthru callback_url thumbnail_url
     description info_url creator_url ratings reject_reasons
     message_to_user tags hold_comments
+    created_at
   ].map(&:to_sym)
 
   # These attributes are treated as nested Hashes and serialized to JSON and
@@ -89,6 +90,12 @@ class Video < Peanut::RedisOnly
     define_method "#{name}=" do |value|
       self.temp_attrs[name] = value
     end
+  end
+
+  def created_at_time
+    n = self.temp_attrs[:created_at]
+    return nil if ! n
+    Time.at(n.to_i)
   end
 
   # Bracket indexing is used by ActiveRecord.
