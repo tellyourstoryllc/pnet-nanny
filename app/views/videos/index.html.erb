@@ -1,4 +1,12 @@
 <h1>Approve Videos</h1>
-<p><%= pluralize(Video.pending_video_ids.size, 'video') %> in queue.</p>
+<p><%= pluralize(@queue_video_count, 'video') %> in queue.</p>
 
 <%= render 'video_listing' %>
+
+<% if @videos.size < @queue_video_count %>
+  <div class='pagination'>
+    <ul>
+      <li><%= link_to 'Next', pending_videos_queue_path(:min_id => @next_page_id) %></li>
+    </ul>
+  </div>
+<% end %>

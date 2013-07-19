@@ -12,6 +12,8 @@ PNet::Nanny::Application.routes.draw do
   match 'review/:action(/:id)' => 'review'
   match 'review' => 'review#index', :as => :review
 
+  match 'videos' => 'videos#index', :as => :pending_videos_queue
+  match 'videos/held' => 'videos#held', :as => :held_videos_queue
   match 'videos(/:action(/:id))' => 'videos'
   match 'video_testing(/:action)' => 'video_testing'
 
