@@ -5,6 +5,9 @@ class Peanut::RedisOnly
 
   # For Notifications
   def self.find_by_id(id)
+    if ! redis.exists(redis_field_key('attrs', id))
+      raise ActiveRecord::RecordNotFound.new(id)
+    end
     new(:id => id.to_s)
   end
 end

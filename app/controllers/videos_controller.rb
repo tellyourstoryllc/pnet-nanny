@@ -29,8 +29,9 @@ class VideosController < ApplicationController
   # AJAX endpoints
   
   def update
-    video = Video.find(params[:id])
-    if ! video
+    begin
+      video = Video.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
       render :json => { :message => "video not found" }
       return
     end
