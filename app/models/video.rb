@@ -1,6 +1,7 @@
 class Video < Peanut::RedisOnly
   extend ActiveModel::Naming
   include Peanut::Redis::Objects
+  include Peanut::Redis::Helpers
 
   TASK_NAME = 'video_approval'
 
@@ -114,8 +115,10 @@ class Video < Peanut::RedisOnly
   end
 
   def save
-    write_attrs
-    enqueue
+    redis.multi do
+      write_attrs
+      enqueue_non_atomically
+    end
     true
   end
 
@@ -148,26 +151,26 @@ class Video < Peanut::RedisOnly
       attrs_to_write[name] = val.to_json if ! val.nil?
     end
 
-    self.attrs.bulk_set(attrs_to_write)
+    redis_hash_key_bulk_set(self.attrs.key, attrs_to_write)
   end
 
   # Add to the appropriate queue based on status.
   def enqueue
+    redis.multi do
+      enqueue_non_atomically
+    end
+  end
+
+  def enqueue_non_atomically
     case self.temp_attrs[:status].to_s
     when 'pending'
-      redis.multi do
-        redis.zadd(self.class.pending_video_ids.key, self.id, self.id)
-        redis.zrem(self.class.held_video_ids.key, self.id)
-      end
+      redis.zadd(self.class.pending_video_ids.key, self.id, self.id)
+      redis.zrem(self.class.held_video_ids.key, self.id)
     when 'held'
-      redis.multi do
-        redis.zadd(self.class.held_video_ids.key, self.id, self.id)
-        redis.zrem(self.class.pending_video_ids.key, self.id)
-      end
+      redis.zadd(self.class.held_video_ids.key, self.id, self.id)
+      redis.zrem(self.class.pending_video_ids.key, self.id)
     else
-      redis.multi do
-        dequeue_non_atomically
-      end
+      dequeue_non_atomically
     end
   end
 
