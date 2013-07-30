@@ -115,6 +115,7 @@ class Video < Peanut::RedisOnly
   end
 
   def save
+    self.id ||= generate_id
     redis.multi do
       write_attrs
       enqueue_non_atomically
@@ -139,8 +140,8 @@ class Video < Peanut::RedisOnly
   # Currently, there's nothing extra to do besides what's done in #delete.
   alias_method :destroy, :delete
 
+  # Precondition: self.id must be set.
   def write_attrs
-    self.id ||= generate_id
     self.temp_attrs[:id] = self.id
     self.temp_attrs[:created_at] ||= Time.now.utc.to_i
 
