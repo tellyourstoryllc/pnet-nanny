@@ -8,6 +8,7 @@ PNet::Nanny::Application.routes.draw do
 
   match 'api/video/submit' => 'video_api#submit'
   match 'api/photo/submit' => 'photo_api#submit'
+  match 'api/photo/delete' => 'photo_api#delete'
 
   match 'review/:action(/:id)' => 'review'
   match 'review' => 'review#index', :as => :review

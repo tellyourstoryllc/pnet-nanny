@@ -45,7 +45,7 @@ class PhotoApiController < ApiController
   def delete
     require_params(:url) do
       if p = Photo.find_by_url(params[:url]) and p.status == 'pending'
-        p.delete
+        p.destroy
         render :json=>{:success=>true}, :status=>200
       else
         render :json=>{:error=>"photo not found or already processed"}, :status=>400
