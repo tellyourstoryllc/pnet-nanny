@@ -19,3 +19,7 @@ rerun.txt
 pickle-email-*.html
 .rvmrc
 **.DS_Store
+
+Gemfile.local
+Gemfile.local.lock
+config/unicorn.rb
