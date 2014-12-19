@@ -7,7 +7,7 @@ class ApiController < ApplicationController
     msg ||= 'error'
     code ||= 404
     if is_error = block_given? ? yield : true
-      render :json=>{ :error => { :message=>msg, :code=>code } }
+      render :json=>{ :error => { :message=>msg, :code=>code } }, status: code
       true
     end
   end
