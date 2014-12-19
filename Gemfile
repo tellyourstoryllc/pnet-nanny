@@ -25,7 +25,7 @@ group :assets do
 
   gem 'therubyracer'
   gem 'less-rails'
-  gem 'less-rails-bootstrap'
+  gem 'less-rails-bootstrap', '3.3.1.0'
 end
 
 gem 'jquery-rails'
