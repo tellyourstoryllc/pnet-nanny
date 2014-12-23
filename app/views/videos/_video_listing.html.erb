@@ -5,7 +5,7 @@
       <% reset_cycle %>
       <div class='video'>
         <div class='video-display'>
-          <video poster='<%= video.thumbnail_url %>' preload='none' controls>
+          <video poster='<%= video.thumbnail_url %>' preload='auto' controls>
             <source src='<%= video.url %>'>
           </video>
           <div class='description'><%= video.description %></div>
