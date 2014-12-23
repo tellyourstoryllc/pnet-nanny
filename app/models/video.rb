@@ -3,7 +3,8 @@ class Video < Peanut::RedisOnly
   include Peanut::Redis::Objects
   include Peanut::Redis::Helpers
 
-  TASK_NAME = 'video_approval'
+  #TASK_NAME = 'video_approval'
+  TASK_NAME = 'nudity'
 
   attr_accessor :id, :temp_attrs
   hash_key :attrs
