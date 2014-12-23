@@ -76,7 +76,7 @@ class Video < Peanut::RedisOnly
     # Deserialize nested hashes.
     self.nested_attributes.each do |name|
       val = self.temp_attrs[name]
-      self.temp_attrs[name] = val.nil? ? nil : JSON.parse(val)
+      self.temp_attrs[name] = val.blank? ? nil : JSON.parse(val)
     end
     self.temp_attrs.merge!(new_attrs.slice(*self.attribute_names))
   end
