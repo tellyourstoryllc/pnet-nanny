@@ -3,6 +3,12 @@
 class VideoApiController < ApiController
 
   def submit
+    params[:video] ||= {}
+    params[:video][:url] ||= params[:url] if params[:url].present?
+    params[:video][:callback_url] ||= params[:callback_url] if params[:callback_url].present?
+    params[:video][:passthru] ||= params[:passthru] if params[:passthru].present?
+    params[:video][:passthrough] ||= params[:passthrough] if params[:passthrough].present?
+
     if params[:video][:url] !~ URI::regexp || params[:video][:callback_url] !~ URI::regexp
       render :json => { :error => "invalid url" }, :status => 400
       return
