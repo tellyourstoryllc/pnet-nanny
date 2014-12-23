@@ -22,7 +22,7 @@
         <form class='video-approval-form approve-video-approval-form form form-inline' data-video-id='<%= video.id %>'>
           <%= hidden_field_tag 'video[action]', nil %>
           <div class='form-group-title'>Approve</div>
-          <% video.ratings.each do |rating| %>
+          <% (video.ratings || []).each do |rating| %>
             <% if rating[:type] == 'radio' %>
               <div class='rating radio-rating <%= cycle('rating-odd', 'rating-even') %>'>
                 <label><%= rating[:title] %>:</label>
@@ -46,7 +46,7 @@
           <%= hidden_field_tag 'video[action]', nil %>
           <div class='form-group-title'>Reject</div>
           <div class='reject-reasons'>
-            <% video.reject_reasons.each do |reject_reason| %>
+            <% (video.reject_reasons || []).each do |reject_reason| %>
               <div class='reject-option-container'>
                 <label for='video_<%= video.id %>_reject_reason_id_<%= reject_reason[:id] %>' class='radio'>
                   <%= radio_button_tag "video[reject_reason_id]", reject_reason[:id], false, :id => "video_#{video.id}_reject_reason_id_#{reject_reason[:id]}", 'data-reject-reason-id' => reject_reason[:id] %>
@@ -132,12 +132,14 @@
 
   VideoApp.isValidForReject = function(form) {
     var valid = true;
-    if ($('input:checked', form).val() == null) {
-      // User didn't select a rating.
-      alert("Please select reason before rejecting.");
-      valid = false;
-      return false; // break.
-    }
+    $('.radio-rating', form).each(function() {
+      if ($('input:checked', form).val() == null) {
+        // User didn't select a rating.
+        alert("Please select reason before rejecting.");
+        valid = false;
+        return false; // break.
+      }
+    });
     return valid;
   };
 
