@@ -20,6 +20,7 @@ unless @photos.nil? or @photos.empty?
 
 				s.div(foto.description, :class=>'description') if foto.description
 				s/link_to("Link", foto.info_url, :class=>'foto_link small') if foto.info_url
+				s.div(foto.created_at.in_time_zone('Eastern Time (US & Canada)').strftime("%a %-m/%-d/%y %l:%M%P %Z")) if foto.created_at
 				s/link_to("Reject", {:action=>'reject', :id=>foto.id}, :photo_id=>foto.id, :class=>'reject_link small', :remote=>true )
 			}
 
