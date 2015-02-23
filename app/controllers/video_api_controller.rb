@@ -9,6 +9,7 @@ class VideoApiController < ApiController
     params[:video][:passthru] ||= params[:passthru] if params[:passthru].present?
     params[:video][:passthrough] ||= params[:passthrough] if params[:passthrough].present?
     params[:video][:reject_reasons] ||= params[:reject_reasons] if params[:reject_reasons].present?
+    params[:video][:description] ||= params[:description] if params[:description].present?
 
     if params[:video][:url] !~ URI::regexp || params[:video][:callback_url] !~ URI::regexp
       render :json => { :error => "invalid url" }, :status => 400
