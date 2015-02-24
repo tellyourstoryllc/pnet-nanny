@@ -7,7 +7,8 @@ class AdminController < ApplicationController
       if account = Worker.find_by_username(name) and account.authenticate(pw)
         session[:worker_id] = account.id
         session[:token] = account.token
-        flash.now[:notice] = "You are now logged in!"
+        flash[:notice] = "You are now logged in!"
+        redirect_to pending_videos_queue_url
       else
         flash[:error] = 'Login failed!'
       end
