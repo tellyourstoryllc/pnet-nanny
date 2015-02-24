@@ -25,7 +25,7 @@ class Worker < Peanut::ActivePeanut::Base
   end
 
   def registered?
-    self.username and self.password and self.clearance.to_i > 0
+    self.username and self.password_digest and self.clearance.to_i > 0
   end
 
   def create_vote(decision, task_name, photo)
