@@ -3,7 +3,7 @@
 <% else %>
 <div id="register">
   <%= form_tag(:action=>'register') %>
-  <div>Username: <%= text_field_tag('username', '') %></div>
+  <div>Username: <%= text_field_tag('username', @current_worker.username) %></div>
   <div>Password: <%= password_field_tag('password', '') %></div>
   <div>Confirm password: <%= password_field_tag('confirm_password', '') %></div>
   <div>Registration code: <%= text_field_tag('code', '') %></div>

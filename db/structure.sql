@@ -87,6 +87,7 @@ CREATE TABLE `workers` (
   `creating_ip` char(15) DEFAULT NULL,
   `total_votes` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `rating` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `password_digest` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `turk_id` (`turk_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -98,3 +99,7 @@ INSERT INTO schema_migrations (version) VALUES ('20130627004528');
 INSERT INTO schema_migrations (version) VALUES ('20130627154717');
 
 INSERT INTO schema_migrations (version) VALUES ('20130627155450');
+
+INSERT INTO schema_migrations (version) VALUES ('20150223191108');
+
+INSERT INTO schema_migrations (version) VALUES ('20150223203137');
