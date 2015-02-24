@@ -1,6 +1,7 @@
 <div class='logo pull-left' onclick="window.location='/'"></div>
 
 <ul class="nav pull-right">
+<% if @current_worker && @current_worker.registered? %>
 <% 
 
 items = []
@@ -12,9 +13,7 @@ items << ["Review Photos", { :controller=>'review', :action=>'index' }]
 items << ["Submit Video", { :controller => 'video_testing', :action => 'add' }]
 items << ["Submit Photo", :bookmarklet]
 
-if @current_worker and @current_worker.registered?
-  items << ["Logout (#{@current_worker.description})", { :controller=>'admin', :action=>'logout' }]
-end
+items << ["Logout (#{@current_worker.description})", { :controller=>'admin', :action=>'logout' }]
 
 # items << "Funds: $#{Peanut::Redis::Cache.capture(:duration=>300) { Turkey.adapter.availableFunds }}"
 
@@ -31,3 +30,4 @@ items.each do |item|
   end
 end %>
 </ul>
+<% end -%>
