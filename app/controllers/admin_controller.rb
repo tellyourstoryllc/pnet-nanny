@@ -4,7 +4,7 @@ class AdminController < ApplicationController
   
   def login
     if params[:login] and name = params[:username] and pw = params[:password]
-      if account = Worker.find_by_username(name) and account.password == pw
+      if account = Worker.find_by_username(name) and account.authenticate(pw)
         session[:worker_id] = account.id
         session[:token] = account.token
         flash.now[:notice] = "You are now logged in!"

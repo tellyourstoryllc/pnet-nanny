@@ -7,6 +7,8 @@ class Worker < Peanut::ActivePeanut::Base
   attr_accessible :created_at, :creating_ip
   attr_accessible :total_votes, :rating
 
+  has_secure_password
+
   redis_attr :correct_votes, :incorrect_votes
   list :recent_votes, :maxlength=>1000, :marshal=>true
 
