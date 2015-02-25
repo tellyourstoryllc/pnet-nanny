@@ -2,10 +2,8 @@ require 'will_paginate'
 
 class ReviewController < ApplicationController
 
-  before_filter :require_yummy_cookie
-  before_filter :identify_worker
-  before_filter :require_user
-  before_filter :identify_task
+  before_filter :require_yummy_cookie, :identify_worker, :require_user,
+    :require_staff, :identify_task
 
   def index
 
