@@ -1,4 +1,5 @@
 class Worker < Peanut::ActivePeanut::Base    
+  STAFF_CLEARANCE = 100
 
   include Peanut::Redis::Attributes
   include Peanut::Redis::Objects
@@ -65,6 +66,10 @@ class Worker < Peanut::ActivePeanut::Base
     self.save
 
     self.rating
+  end
+
+  def staff_clearance?
+    clearance >= STAFF_CLEARANCE
   end
 
 end

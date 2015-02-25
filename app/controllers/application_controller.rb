@@ -45,7 +45,11 @@ class ApplicationController < ActionController::Base
   end
 
   def require_user
-    redirect_to(:login) unless @current_worker and @current_worker.clearance.to_i > 0
+    redirect_to(:login) unless @current_worker && @current_worker.clearance.to_i > 0
+  end
+
+  def require_staff
+    redirect_to(:pending_videos_queue) unless @current_worker && @current_worker.staff_clearance?
   end
 
   # Log stuff here...

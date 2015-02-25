@@ -1,6 +1,6 @@
 class VideoTestingController < ApplicationController
 
-  before_filter :identify_worker
+  before_filter :identify_worker, :require_staff
 
   def add
     if request.post?

@@ -7,10 +7,13 @@
 items = []
 
 items << ["Videos", { :controller=>'videos', :action=>'index' }]
-items << ["Held Videos", { :controller=>'videos', :action=>'held' }]
 items << ["Photos", { :controller=>'review', :action=>'index' }]
-items << ["Submit Video", { :controller => 'video_testing', :action => 'add' }]
-items << ["Submit Photo", { :controller => 'dummy', :action => 'submit' }]
+
+if @current_worker.staff_clearance?
+  items << ["Held Videos", { :controller=>'videos', :action=>'held' }]
+  items << ["Submit Video", { :controller => 'video_testing', :action => 'add' }]
+  items << ["Submit Photo", { :controller => 'dummy', :action => 'submit' }]
+end
 
 items << ["Logout (#{@current_worker.description})", { :controller=>'admin', :action=>'logout' }]
 

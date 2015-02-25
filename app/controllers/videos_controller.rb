@@ -1,8 +1,8 @@
 class VideosController < ApplicationController
 
-  before_filter :require_yummy_cookie
-  before_filter :identify_worker
-  before_filter :require_user
+  before_filter :require_yummy_cookie, :identify_worker, :require_user
+  before_filter :require_staff, only: 'held'
+
 
   def index
 
