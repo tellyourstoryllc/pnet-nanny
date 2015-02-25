@@ -1,6 +1,6 @@
 class DummyController < ApplicationController
 
-  before_filter :identify_worker
+  before_filter :identify_worker, :require_staff
 
   def submit
     if params[:submit] and url = params[:url] and !url.blank?
