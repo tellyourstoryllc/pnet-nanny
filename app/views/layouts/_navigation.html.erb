@@ -7,10 +7,10 @@
 items = []
 
 items << ["Videos", { :controller=>'videos', :action=>'index' }]
+items << ["Held Videos", { :controller=>'videos', :action=>'held' }] if @current_worker.staff_clearance?
 items << ["Photos", { :controller=>'review', :action=>'index' }]
 
 if @current_worker.staff_clearance?
-  items << ["Held Videos", { :controller=>'videos', :action=>'held' }]
   items << ["Submit Video", { :controller => 'video_testing', :action => 'add' }]
   items << ["Submit Photo", { :controller => 'dummy', :action => 'submit' }]
 end
