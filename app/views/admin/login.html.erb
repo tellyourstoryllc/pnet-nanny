@@ -1,7 +1,7 @@
 <% if @current_worker and @current_worker.registered? %>
 
 <% else %>
-<div id="login">
+<div id="login" class="form">
   <%= form_tag(:action=>'login') %>
   <div>Username: <%= text_field_tag('username', '') %></div>
   <div>Password: <%= password_field_tag('password', '') %></div>
