@@ -31,8 +31,11 @@ class WorkerController < AdminController
 
       @current_worker.clearance = 1
       @current_worker.save
-      flash[:notice] = "You are now registered."
-      redirect_to(:review)
+
+      session[:worker_id] = @current_worker.id
+      session[:token] = @current_worker.token
+
+      redirect_to pending_videos_queue_url
     end
   end
 
