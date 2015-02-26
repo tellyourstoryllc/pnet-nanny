@@ -2,6 +2,8 @@ PNet::Nanny::Application.routes.draw do
 
   match 'login' => 'admin#login', :as => :login
   match 'register' => 'worker#register'
+  match 'worker/edit' => 'worker#edit'
+  match 'worker/update' => 'worker#update'
 
   match 'mturk/review' => 'mturk#review', :as => :turkey
   match 'mturk/vote' => 'mturk#vote', :as => :vote

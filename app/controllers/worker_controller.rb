@@ -33,5 +33,29 @@ class WorkerController < AdminController
       redirect_to(:review)
     end
   end
-  
+
+  def edit
+  end
+
+  def update
+    if params[:password]
+      if !@current_worker.authenticate(params[:current_password])
+        flash.now[:error] = 'Current password is incorrect.'
+      elsif params[:password] != params[:confirm_password]
+        flash.now[:error] = 'Confirmation password does not match.'
+      else
+        flash.now[:success] = 'Successfully changed your password.'
+        @current_worker.update_attributes(update_params)
+      end
+    end
+
+    render :edit
+  end
+
+
+  private
+
+  def update_params
+    params.slice(:password)
+  end
 end
