@@ -6,6 +6,7 @@
   <div>Username: <%= text_field_tag('username', @current_worker.username) %></div>
   <div>Password: <%= password_field_tag('password', '') %></div>
   <div>Confirm password: <%= password_field_tag('confirm_password', '') %></div>
+  <div>Email: <%= text_field_tag('email', '') %></div>
   <div>Registration code: <%= text_field_tag('code', '') %></div>
   <div><%= submit_tag('Register', :name=>'register') %></div>
 </form>
