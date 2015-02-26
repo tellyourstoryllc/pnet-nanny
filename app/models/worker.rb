@@ -72,4 +72,8 @@ class Worker < Peanut::ActivePeanut::Base
     clearance >= STAFF_CLEARANCE
   end
 
+  def self.find_by_login(login)
+    find_by_username(login) || find_by_email(login)
+  end
+
 end
