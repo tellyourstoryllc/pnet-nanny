@@ -2,6 +2,11 @@ PNet::Nanny::Application.routes.draw do
 
   match 'login' => 'admin#login', :as => :login
   match 'register' => 'worker#register'
+  match 'edit' => 'worker#edit'
+  match 'update' => 'worker#update'
+  match 'forgot_password' => 'worker#forgot_password', as: :forgot_password
+  match 'password/reset' => 'worker#send_reset_email', as: :send_reset_email
+  match 'password/reset/:token' => 'worker#reset_password', as: :reset_password
 
   match 'mturk/review' => 'mturk#review', :as => :turkey
   match 'mturk/vote' => 'mturk#vote', :as => :vote
@@ -27,7 +32,8 @@ PNet::Nanny::Application.routes.draw do
   match 'yum' => 'application#check_cookies'
 
 
-  root :to => redirect('http://perceptualnet.com')
+  #root :to => redirect('http://perceptualnet.com')
+  root to: 'videos#index'
   # match '/*path' => redirect('http://perceptualnet.com')
 
 end

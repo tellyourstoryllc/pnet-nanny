@@ -15,6 +15,7 @@ if @current_worker.staff_clearance?
   items << ["Submit Photo", { :controller => 'dummy', :action => 'submit' }]
 end
 
+items << ["Account", {controller: 'worker', action: 'edit'}]
 items << ["Logout (#{@current_worker.description})", { :controller=>'admin', :action=>'logout' }]
 
 # items << "Funds: $#{Peanut::Redis::Cache.capture(:duration=>300) { Turkey.adapter.availableFunds }}"

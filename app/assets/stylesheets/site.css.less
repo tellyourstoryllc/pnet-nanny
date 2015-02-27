@@ -160,7 +160,7 @@ div.lead {
   }
 }
 
-div#login {
+div.form {
   background: @pnBlue;
   width: 200px;
   padding: 10px;
@@ -168,19 +168,48 @@ div#login {
   //.border-radius(8px);
   .box-shadow(0px 5px 5px @gray);
   margin: auto;  
+
+  input {
+    width: 100px;
+    margin-top: 10px;
+  }
+}
+
+div#login {
+  width: 350px;
+
+  input {
+    width: 200px;
+  }
+}
+
+div#register {
+  width: 340px;
+
+  input {
+    width: 200px;
+  }
+}
+
+div#edit_worker {
+  width: 280px;
+
   input {
     width: 100px;
   }
 }
 
-div#register {
-  background: @pnBlue;
-  width: 300px;
-  padding: 10px;
-  text-align: right;
-  //.border-radius(8px);
-  .box-shadow(0px 5px 5px @gray);
-  margin: 10px auto 40px auto;
+div#forgot_password {
+  width: 340px;
+
+  input {
+    width: 200px;
+  }
+}
+
+div#reset_password {
+  width: 280px;
+
   input {
     width: 100px;
   }

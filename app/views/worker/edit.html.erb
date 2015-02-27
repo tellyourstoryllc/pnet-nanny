@@ -1,0 +1,8 @@
+<div id="edit_worker" class="form">
+  <%= form_tag(action: 'update') %>
+    <div>Current password: <%= password_field_tag('current_password', '') %></div>
+    <div>New password: <%= password_field_tag('password', '') %></div>
+    <div>Confirm new password: <%= password_field_tag('confirm_password', '') %></div>
+    <div><%= submit_tag('Update') %></div>
+  </form>
+</div>
