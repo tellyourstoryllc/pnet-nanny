@@ -3,7 +3,7 @@
 <% else %>
 <div id="login" class="form">
   <%= form_tag(:action=>'login') %>
-  <div>Username or email: <%= text_field_tag('login', '') %></div>
+  <div>Username or email: <%= text_field_tag('login', params[:login]) %></div>
   <div>Password: <%= password_field_tag('password', '') %></div>
   <div><%= submit_tag('Login') %></div>
   <div style="font-size: 90%;"><%= link_to 'Forgot password?', forgot_password_url %></div>
