@@ -35,7 +35,7 @@ class WorkerController < AdminController
       session[:worker_id] = @current_worker.id
       session[:token] = @current_worker.token
 
-      redirect_to pending_videos_queue_url
+      redirect_to home_url
     end
   end
 

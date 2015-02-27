@@ -49,7 +49,7 @@ class ApplicationController < ActionController::Base
   end
 
   def require_staff
-    redirect_to(:pending_videos_queue) unless @current_worker && @current_worker.staff_clearance?
+    redirect_to home_url unless @current_worker && @current_worker.staff_clearance?
   end
 
   # Log stuff here...
@@ -75,6 +75,10 @@ class ApplicationController < ActionController::Base
     else 
       render :json=>{:error => "missing parameter(s): #{missing.join(', ')}"}, :status=>412
     end
+  end
+
+  def home_url
+    pending_videos_queue_url
   end
 
 end
