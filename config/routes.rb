@@ -29,7 +29,8 @@ PNet::Nanny::Application.routes.draw do
   match 'yum' => 'application#check_cookies'
 
 
-  root :to => redirect('http://perceptualnet.com')
+  #root :to => redirect('http://perceptualnet.com')
+  root to: 'videos#index'
   # match '/*path' => redirect('http://perceptualnet.com')
 
 end
