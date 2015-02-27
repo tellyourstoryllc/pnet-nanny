@@ -6,6 +6,7 @@
   <div>Username or email: <%= text_field_tag('login', '') %></div>
   <div>Password: <%= password_field_tag('password', '') %></div>
   <div><%= submit_tag('Login') %></div>
+  <div style="font-size: 90%;"><%= link_to 'Forgot password?', forgot_password_url %></div>
 </form>
 </div>
 <% end %>

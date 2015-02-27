@@ -4,6 +4,9 @@ PNet::Nanny::Application.routes.draw do
   match 'register' => 'worker#register'
   match 'edit' => 'worker#edit'
   match 'update' => 'worker#update'
+  match 'forgot_password' => 'worker#forgot_password', as: :forgot_password
+  match 'password/reset' => 'worker#send_reset_email', as: :send_reset_email
+  match 'password/reset/:token' => 'worker#reset_password', as: :reset_password
 
   match 'mturk/review' => 'mturk#review', :as => :turkey
   match 'mturk/vote' => 'mturk#vote', :as => :vote

@@ -76,4 +76,24 @@ class Worker < Peanut::ActivePeanut::Base
     find_by_username(login) || find_by_email(login)
   end
 
+  def self.password_reset_token_key(token)
+    "password_reset_token:#{token}"
+  end
+
+  def self.find_by_password_reset_token(token)
+    return if token.blank?
+    worker_id = redis.get(password_reset_token_key(token))
+    find_by_id(worker_id) if worker_id
+  end
+
+  def generate_password_reset_token
+    token = SecureRandom.hex
+    redis.setex(self.class.password_reset_token_key(token), 24.hours, id)
+    token
+  end
+
+  def self.delete_password_reset_token(token)
+    redis.del(password_reset_token_key(token))
+  end
+
 end

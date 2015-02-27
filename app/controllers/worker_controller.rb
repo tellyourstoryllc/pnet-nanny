@@ -57,6 +57,42 @@ class WorkerController < AdminController
     render :edit
   end
 
+  def forgot_password
+  end
+
+  # Send reset password link via email
+  def send_reset_email
+    @worker = Worker.find_by_login(params[:login])
+
+    if @worker
+      token = @worker.generate_password_reset_token
+      WorkerMailer.password_reset(@worker, token).deliver! if token
+      flash[:success] = "You should receive an email within a few minutes."
+    else
+      flash[:error] = "Sorry, we couldn't find your account. Please try again."
+    end
+
+    redirect_to forgot_password_url
+  end
+
+  def reset_password
+    @worker = Worker.find_by_password_reset_token(params[:token])
+
+    if @worker
+      if params[:password].present?
+        if params[:password] != params[:confirm_password]
+          flash.now[:error] = 'Confirmation password does not match.'
+        else
+          Worker.delete_password_reset_token(params[:token]) if @worker.update_attributes(password: params[:password])
+          flash.now[:success] = 'Successfully changed your password.'
+          redirect_to home_url
+        end
+      end
+    else
+      flash[:error] = "Sorry, that token does not exist or has expired."
+    end
+  end
+
 
   private
 
