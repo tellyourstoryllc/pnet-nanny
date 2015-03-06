@@ -12,6 +12,7 @@ PNet::Nanny::Application.routes.draw do
   match 'mturk/vote' => 'mturk#vote', :as => :vote
 
   match 'api/video/submit' => 'video_api#submit'
+  match 'api/video/delete' => 'video_api#delete'
   match 'api/photo/submit' => 'photo_api#submit'
   match 'api/photo/delete' => 'photo_api#delete'
 
