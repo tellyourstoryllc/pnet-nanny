@@ -35,9 +35,9 @@ class PhotoApiController < ApiController
 
         # Fingerprint.reconcile(p.fingerprint)
 
-        render :json=>{:success=>true}, :status=>202
+        render json: {success: true, uuid: p.uuid}, status: 202
       else
-        render :json=>{:error=>"invalid url"}, :status=>400
+        render json: {error: "invalid url"}, status: 400
       end
     end
   end
