@@ -95,6 +95,7 @@ class Photo < Peanut::ActivePeanut::Base
   def save
     self[:status] ||= 'pending'
     self[:created_at] ||= Time.now.utc
+    self[:uuid] ||= generate_uuid
     super
   end
 
@@ -254,6 +255,10 @@ class Photo < Peanut::ActivePeanut::Base
       log_error "Callback failed: #{self.callback_url}. #{e}", :callback
       false
     end
+  end
+
+  def generate_uuid
+    SecureRandom.uuid
   end
 
 end

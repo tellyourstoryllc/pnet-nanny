@@ -21,7 +21,20 @@ class VideoApiController < ApiController
     v.status = 'pending'
     v.save
 
-    render :json=>{:success=>true}, :status=>202
+    render json: {success: true, uuid: v.uuid}, status: 202
+  end
+
+  def delete
+    require_params(:uuid) do
+      video = Video.find_by_uuid(params[:uuid])
+
+      if video
+        video.destroy
+        render :json=>{:success=>true}, :status=>200
+      else
+        render :json=>{:error=>"Video not found or already processed"}, :status=>400
+      end
+    end
   end
 
 end

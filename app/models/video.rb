@@ -15,7 +15,7 @@ class Video < Peanut::RedisOnly
 
   class_attribute :attribute_names
   self.attribute_names = %w[
-    status client_id url passthru callback_url thumbnail_url
+    uuid status client_id url passthru callback_url thumbnail_url
     description info_url creator_url ratings reject_reasons
     message_to_user tags hold_comments
     created_at
@@ -33,6 +33,8 @@ class Video < Peanut::RedisOnly
 
   # SortedSet of held videos.
   sorted_set :held_video_ids, :global => true
+
+  hash_key :ids_by_uuid, global: true
 
   class << self
 
@@ -65,6 +67,11 @@ class Video < Peanut::RedisOnly
       QueueProcessor.work_off_queue
     end
     alias_method :process_notification_queue, :process_callback_queue
+
+    def find_by_uuid(uuid)
+      id = ids_by_uuid[uuid] if uuid
+      find(id) if id
+    end
 
   end
 
@@ -117,8 +124,11 @@ class Video < Peanut::RedisOnly
 
   def save
     self.id ||= generate_id
+    self.uuid ||= generate_uuid
+
     redis.multi do
       write_attrs
+      self.class.ids_by_uuid[uuid] = id
       enqueue_non_atomically
     end
     true
@@ -319,6 +329,10 @@ class Video < Peanut::RedisOnly
 
   def generate_id
     self.class.last_video_id.increment
+  end
+
+  def generate_uuid
+    SecureRandom.uuid
   end
 
 end
