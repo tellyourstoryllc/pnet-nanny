@@ -21,7 +21,7 @@ class VideoApiController < ApiController
     v.status = 'pending'
     v.save
 
-    render :json=>{:success=>true}, :status=>202
+    render json: {success: true, uuid: v.uuid}, status: 202
   end
 
 end
