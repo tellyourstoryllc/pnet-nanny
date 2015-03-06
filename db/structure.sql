@@ -23,6 +23,7 @@ CREATE TABLE `photos` (
   `fingerprint` bigint(20) unsigned DEFAULT NULL,
   `status` enum('pending','delivering','completed','deleted') NOT NULL DEFAULT 'pending',
   `created_at` datetime NOT NULL,
+  `uuid` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `status` (`status`,`created_at`),
   KEY `fingerprint` (`fingerprint`),
@@ -106,3 +107,5 @@ INSERT INTO schema_migrations (version) VALUES ('20150223191108');
 INSERT INTO schema_migrations (version) VALUES ('20150223203137');
 
 INSERT INTO schema_migrations (version) VALUES ('20150226202905');
+
+INSERT INTO schema_migrations (version) VALUES ('20150306163629');
