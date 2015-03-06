@@ -63,4 +63,7 @@ gem 'bcrypt-ruby', '~> 3.0.0'
 group :development, :test do
   # To use debugger
   gem 'debugger'
+  gem 'pry-rails'
+  gem 'pry-doc'
+  gem 'awesome_print'
 end
