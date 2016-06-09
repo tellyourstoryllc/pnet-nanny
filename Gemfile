@@ -36,7 +36,7 @@ gem 'redis-objects', :require => 'redis/objects'
 gem 'mini_magick'
 
 # Perceptual hash
-gem 'phashion'
+#gem 'phashion'
 
 # Pagination
 gem 'will_paginate', '~> 3.0'

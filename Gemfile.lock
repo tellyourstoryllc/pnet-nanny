@@ -88,7 +88,6 @@ GEM
     multi_xml (0.5.3)
     mysql2 (0.3.11)
     nokogiri (1.5.6)
-    phashion (1.0.5)
     polyglot (0.3.3)
     pry (0.10.1)
       coderay (~> 1.1.0)
@@ -181,7 +180,6 @@ DEPENDENCIES
   less-rails-bootstrap (= 3.3.1.0)
   mini_magick
   mysql2
-  phashion
   pry-doc
   pry-rails
   rails (= 3.2.12)
