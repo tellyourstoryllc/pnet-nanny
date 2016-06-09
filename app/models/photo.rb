@@ -1,4 +1,4 @@
-require 'phashion'
+#require 'phashion'
 require 'open-uri'
 
 class Photo < Peanut::ActivePeanut::Base

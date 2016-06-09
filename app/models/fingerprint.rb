@@ -1,7 +1,7 @@
 # pHash: http://www.phash.org
 # Installing on linux: https://github.com/mperham/phashion/pull/9
 
-require 'phashion'
+#require 'phashion'
 
 class Fingerprint < Peanut::ActivePeanut::Base
   include Peanut::Redis::Attributes
